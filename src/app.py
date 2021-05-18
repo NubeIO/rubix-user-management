@@ -43,8 +43,8 @@ def create_app(app_setting) -> Flask:
         cursor.close()
 
     def register_router(_app) -> Flask:
-        from src.routes import bp_example
-        _app.register_blueprint(bp_example)
+        from src.routes import bp_system
+        _app.register_blueprint(bp_system)
         return _app
 
     setup(app)

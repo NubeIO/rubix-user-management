@@ -1,4 +1,4 @@
-# rubix-client-management
+# rubix-user-management
 
 ## Running in development
 

@@ -23,7 +23,7 @@ class AppSetting:
     GLOBAL_DIR_ENV = 'APP_BASE_GLOBAL'
     DATA_DIR_ENV = 'APP_BASE_DATA'
     CONFIG_DIR_ENV = 'APP_BASE_CONFIG'
-    KEY: str = 'APP_BASE_SETTING'
+    FLASK_KEY: str = 'APP_SETTING'
     default_global_dir = 'out'
     default_data_dir: str = 'data'
     default_config_dir: str = 'config'
@@ -72,7 +72,7 @@ class AppSetting:
         return self
 
     def init_app(self, app: Flask):
-        app.config[AppSetting.KEY] = self
+        app.config[AppSetting.FLASK_KEY] = self
         return self
 
     def __join_global_dir(self, _dir):
