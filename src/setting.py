@@ -32,8 +32,8 @@ class AppSetting:
     default_config_dir: str = 'config'
     default_setting_file: str = 'config.json'
     default_logging_conf: str = 'logging.conf'
-    fallback_logging_conf: str = 'config/logging.example.conf'
-    fallback_prod_logging_conf: str = 'config/logging.prod.example.conf'
+    fallback_logging_conf: str = 'config/logging.conf'
+    fallback_prod_logging_conf: str = 'config/logging.prod.conf'
     default_secret_key_file = 'secret_key.txt'
 
     def __init__(self, **kwargs):
