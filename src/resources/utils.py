@@ -4,7 +4,6 @@ import re
 import jwt
 from flask import current_app, request
 from flask_restful import fields, reqparse
-from jwt import DecodeError
 from rubix_http.exceptions.exception import UnauthorizedException
 from werkzeug.security import generate_password_hash
 
@@ -39,7 +38,7 @@ def map_rest_schema(schema, resource_fields):
 def encode_jwt_token(uuid: str, username: str):
     app_setting = current_app.config[AppSetting.FLASK_KEY]
     payload = {
-        'exp': datetime.datetime.utcnow() + datetime.timedelta(days=30, hours=0, seconds=0),
+        'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=1),
         'iat': datetime.datetime.utcnow(),
         'sub': uuid,
         'username': username
@@ -62,7 +61,7 @@ def decode_jwt_token(token):
     app_setting = current_app.config[AppSetting.FLASK_KEY]
     try:
         return jwt.decode(token, app_setting.secret_key, algorithms="HS256")
-    except DecodeError as e:
+    except Exception as e:
         raise UnauthorizedException(str(e))
 
 
