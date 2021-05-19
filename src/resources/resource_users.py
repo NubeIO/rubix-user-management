@@ -154,6 +154,15 @@ class UsersCheckByEmailResource(RubixResource):
         return {'exist': bool(user)}
 
 
+class UsersRefreshToken(RubixResource):
+    @classmethod
+    def get(cls):
+        access_token = get_access_token()
+        username = decode_jwt_token(access_token).get('username', '')
+        uuid = decode_jwt_token(access_token).get('sub', '')
+        return encode_jwt_token(uuid, username)
+
+
 class UsersAuthenticateResource(RubixResource):
     @classmethod
     def get(cls):

@@ -24,6 +24,7 @@ api_users.add_resource(UsersVerifyResource, '/verify')
 api_users.add_resource(UsersCheckByUsernameResource, '/check/username')
 api_users.add_resource(UsersCheckByEmailResource, '/check/email')
 api_users.add_resource(UsersAuthenticateResource, '/authenticate')
+api_users.add_resource(UsersRefreshToken, '/refresh_token')
 
 # 3
 api_user = Api(bp_user)
