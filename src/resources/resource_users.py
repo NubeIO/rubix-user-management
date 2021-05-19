@@ -2,7 +2,7 @@ import uuid as uuid_
 from abc import abstractmethod
 
 from flask_restful import marshal_with, reqparse
-from rubix_http.exceptions.exception import NotFoundException, BadDataException
+from rubix_http.exceptions.exception import NotFoundException, BadDataException, UnauthorizedException
 from rubix_http.resource import RubixResource
 from werkzeug.security import check_password_hash
 
@@ -104,12 +104,16 @@ class UsersChangePasswordResource(RubixResource):
     def post(cls):
         access_token = get_access_token()
         parser = reqparse.RequestParser()
+        parser.add_argument('username', type=str, required=True, store_missing=False)
+        parser.add_argument('password', type=str, required=True, store_missing=False)
         parser.add_argument('new_password', type=str, required=True, store_missing=False)
         args = parser.parse_args()
         username = decode_jwt_token(access_token).get('username', '')
         user: UserModel = UserModel.find_by_username(username)
         if user is None:
             raise NotFoundException("User does not exist")
+        if not (args['username'] == username and check_password_hash(user.password, args['password'])):
+            raise UnauthorizedException("Invalid username or password")
         user.password = encrypt_password(args['new_password'])
         user.commit()
         return {'message': 'Your password has been changed successfully'}

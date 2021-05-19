@@ -66,14 +66,8 @@ def decode_jwt_token(token):
 
 
 def encrypt_password(password):
-    error = ''
-    if len(password) < 8:
-        error = f'password must have at lease 8 characters.'
-    if not re.search(r'[\d]+', password):
-        error = f'{error} password must have at least one digit (0-9).'
-    if not re.search('[A-Z]+', password):
-        error = f'{error} password must have at least one uppercase (A-Z).'
-    if error:
+    if len(password) < 8 or not re.search(r'[\d]+', password) or not re.search('[A-Z]+', password):
+        error = f'Password must have least 8 characters, one digit & one upper case'
         raise ValueError(error)
     return generate_password_hash(password, method='sha256')
 
