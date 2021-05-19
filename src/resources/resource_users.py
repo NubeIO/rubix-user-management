@@ -8,7 +8,7 @@ from rubix_http.resource import RubixResource
 from src.models.enum import StateType
 from src.models.user.model_user import UserModel
 from src.resources.rest_schema.schema_user import user_all_attributes, user_return_fields, user_all_fields_with_children
-from src.resources.utils import encrypt_password, parse_user_update
+from src.resources.utils import encrypt_password, parse_user_update, encode_jwt_token
 
 
 class UsersResourceList(RubixResource):
@@ -26,14 +26,13 @@ class UsersResourceList(RubixResource):
         return UserModel.find_all()
 
     @classmethod
-    @marshal_with(user_return_fields)
     def post(cls):
         args = cls.parser.parse_args()
         uuid = str(uuid_.uuid4())
         user = UserModel(uuid=uuid, **args)
         user.password = encrypt_password(user.password)
         user.save_to_db()
-        return user
+        return encode_jwt_token(user.uuid, user.username)
 
 
 class UsersResource(RubixResource):
