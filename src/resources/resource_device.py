@@ -21,7 +21,9 @@ class DeviceResourceList(RubixResource):
     @classmethod
     @marshal_with(device_return_fields)
     def get(cls):
-        return DeviceModel.find_all()
+        access_token = get_access_token()
+        user_uuid = decode_jwt_token(access_token).get('sub', '')
+        return DeviceModel.find_by_user_uuid(user_uuid=user_uuid)
 
     @classmethod
     @marshal_with(device_return_fields)
