@@ -43,9 +43,10 @@ def create_app(app_setting) -> Flask:
         cursor.close()
 
     def register_router(_app) -> Flask:
-        from src.routes import bp_system, bp_users, bp_devices
+        from src.routes import bp_system, bp_users, bp_current_user, bp_devices
         _app.register_blueprint(bp_system)
         _app.register_blueprint(bp_users)
+        _app.register_blueprint(bp_current_user)
         _app.register_blueprint(bp_devices)
         return _app
 

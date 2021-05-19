@@ -9,7 +9,8 @@ from werkzeug.security import check_password_hash
 from src.models.enum import StateType
 from src.models.user.model_user import UserModel
 from src.resources.rest_schema.schema_user import user_all_attributes, user_return_fields, user_all_fields_with_children
-from src.resources.utils import encode_jwt_token, encrypt_password, decode_jwt_token, get_access_token
+from src.resources.utils import encode_jwt_token, encrypt_password, decode_jwt_token, get_access_token, \
+    parse_user_update
 
 
 class UserResourceList(RubixResource):
@@ -43,21 +44,16 @@ class UserResource(RubixResource):
     def get(cls, **kwargs):
         user: UserModel = cls.get_user(**kwargs)
         if user is None:
-            raise NotFoundException('User not found')
+            raise NotFoundException('User does not exist')
         return user
 
     @classmethod
     @marshal_with(user_return_fields)
     def patch(cls, **kwargs):
-        parser = reqparse.RequestParser()
-        parser.add_argument('first_name', type=str, required=False, store_missing=False)
-        parser.add_argument('last_name', type=str, required=False, store_missing=False)
-        parser.add_argument('email', type=str, required=False, store_missing=False)
-        parser.add_argument('device_ids', type=str, required=False, store_missing=False)
-        args = parser.parse_args()
+        args = parse_user_update()
         user: UserModel = cls.get_user(**kwargs)
         if user is None:
-            raise NotFoundException("User not found")
+            raise NotFoundException("User does not exist")
         user.update(**args)
         return user
 
@@ -65,9 +61,9 @@ class UserResource(RubixResource):
     def delete(cls, **kwargs):
         user: UserModel = cls.get_user(**kwargs)
         if user is None:
-            raise NotFoundException("User not found")
+            raise NotFoundException("User does not exist")
         user.delete_from_db()
-        return {'message': 'User has been deleted successfully'}
+        return '', 204
 
     @classmethod
     @abstractmethod
@@ -98,7 +94,7 @@ class UserVerifyResource(RubixResource):
         args = parser.parse_args()
         user: UserModel = UserModel.find_by_username(args['username'])
         if user is None:
-            raise NotFoundException("User not found")
+            raise NotFoundException("User does not exist")
         user.state = StateType.VERIFIED
         user.commit()
         return {'message': 'User has been verified successfully'}
@@ -115,7 +111,7 @@ class UserChangePasswordResource(RubixResource):
         username = decode_jwt_token(access_token).get('username', '')
         user: UserModel = UserModel.find_by_username(username)
         if user is None:
-            raise NotFoundException("User not found")
+            raise NotFoundException("User does not exist")
         user.password = encrypt_password(args['new_password'])
         user.commit()
         return {'message': 'Your password has been changed successfully'}
@@ -130,7 +126,7 @@ class UserLoginResource(RubixResource):
         args = parser.parse_args()
         user = UserModel.find_by_username(args['username'])
         if user is None:
-            raise NotFoundException('User not found')
+            raise NotFoundException('User does not exist')
         if user.state == StateType.UNVERIFIED:
             raise ForbiddenException('User is not verified')
         if not check_password_hash(user.password, args['password']):

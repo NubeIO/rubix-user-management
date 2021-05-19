@@ -1,6 +1,7 @@
 from flask import Blueprint
 from flask_restful import Api
 
+from src.resources.resource_current_user import CurrentUserResource
 from src.resources.resource_device import DeviceResourceList, DeviceResourceByUUID
 from src.resources.resource_user import UserResourceList, UserResourceByUUID, UserResourceByUsername, \
     UserLoginResource, UserChangePasswordResource, UserVerifyResource, UserAuthenticateResource
@@ -8,6 +9,7 @@ from src.system.resources.ping import Ping
 
 bp_system = Blueprint('system', __name__, url_prefix='/api/system')
 bp_users = Blueprint('users', __name__, url_prefix='/api/users')
+bp_current_user = Blueprint('current_user', __name__, url_prefix='/api/current_user')
 bp_devices = Blueprint('devices', __name__, url_prefix='/api/devices')
 
 # 1
@@ -24,6 +26,10 @@ api_users.add_resource(UserVerifyResource, '/verify')
 api_users.add_resource(UserAuthenticateResource, '/authenticate')
 
 # 3
+api_current_user = Api(bp_current_user)
+api_current_user.add_resource(CurrentUserResource, '')
+
+# 4
 api_devices = Api(bp_devices)
 api_devices.add_resource(DeviceResourceList, '')
 api_devices.add_resource(DeviceResourceByUUID, '/uuid/<string:uuid>')

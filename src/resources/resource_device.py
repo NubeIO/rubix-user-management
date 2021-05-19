@@ -62,4 +62,4 @@ class DeviceResourceByUUID(RubixResource):
         if device is None:
             raise NotFoundException("Device not found")
         device.delete_from_db()
-        return {'message': 'Device has been deleted successfully'}
+        return '', 204
