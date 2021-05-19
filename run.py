@@ -28,10 +28,9 @@ def number_of_workers():
 @click.option('-l', '--logging-conf', help='Logging config file')
 @click.option('--workers', type=int, help='Gunicorn: The number of worker processes for handling requests.')
 @click.option('--gunicorn-config', help='Gunicorn: config file(gunicorn.conf.py)')
-@click.option('--auth', is_flag=True, help='Enable JWT authentication.')
-def cli(port, global_dir, data_dir, config_dir, prod, workers, setting_file, logging_conf, gunicorn_config, auth):
+def cli(port, global_dir, data_dir, config_dir, prod, workers, setting_file, logging_conf, gunicorn_config):
     setting = AppSetting(port=port, global_dir=global_dir, data_dir=data_dir, config_dir=config_dir,
-                         prod=prod, auth=auth).reload(setting_file)
+                         prod=prod).reload(setting_file)
     options = {
         'bind': '%s:%s' % ('0.0.0.0', setting.port),
         'workers': workers if workers is not None else number_of_workers() if prod else 1,

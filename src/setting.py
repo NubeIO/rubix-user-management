@@ -46,7 +46,6 @@ class AppSetting:
         self.__prod = kwargs.get('prod') or False
         self.__secret_key = ''
         self.__secret_key_file = os.path.join(self.__config_dir, self.default_secret_key_file)
-        self.__auth = kwargs.get('auth') or False
 
     @property
     def port(self):
@@ -71,10 +70,6 @@ class AppSetting:
     @property
     def secret_key(self) -> str:
         return self.__secret_key
-
-    @property
-    def auth(self) -> bool:
-        return self.__auth
 
     def serialize(self, pretty=True) -> str:
         m = {
@@ -103,15 +98,13 @@ class AppSetting:
 
     @staticmethod
     def __handle_secret_key(secret_key_file) -> str:
-        if AppSetting.auth:
-            existing_secret_key = read_file(secret_key_file)
-            if existing_secret_key.strip():
-                return existing_secret_key
+        existing_secret_key = read_file(secret_key_file)
+        if existing_secret_key.strip():
+            return existing_secret_key
 
-            secret_key = AppSetting.__create_secret_key()
-            write_file(secret_key_file, secret_key)
-            return secret_key
-        return ''
+        secret_key = AppSetting.__create_secret_key()
+        write_file(secret_key_file, secret_key)
+        return secret_key
 
     @staticmethod
     def __create_secret_key():

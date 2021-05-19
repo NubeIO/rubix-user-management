@@ -4,19 +4,18 @@ from sqlalchemy import UniqueConstraint
 from sqlalchemy.orm import validates
 
 from src import db
-from src.models.enum import RoleType, StateType
+from src.models.enum import StateType
 from src.models.model_base import ModelBase
 
 
 class UserModel(ModelBase):
     __tablename__ = 'users'
     uuid = db.Column(db.String(80), primary_key=True, nullable=False)
-    first_name = db.Column(db.String(80), nullable=True)
-    last_name = db.Column(db.String(80), nullable=True)
+    first_name = db.Column(db.String(80), nullable=False)
+    last_name = db.Column(db.String(80), nullable=False)
     username = db.Column(db.String(80), nullable=False)
     password = db.Column(db.String(80), nullable=False)
     email = db.Column(db.String(80), nullable=False)
-    role = db.Column(db.Enum(RoleType), nullable=False, default=RoleType.THIRD_PARTY)
     state = db.Column(db.Enum(StateType), nullable=False, default=StateType.UNVERIFIED)
     devices = db.relationship('DeviceModel', cascade="all,delete", backref='user', lazy=True)
 

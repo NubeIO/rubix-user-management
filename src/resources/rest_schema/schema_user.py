@@ -44,11 +44,6 @@ user_return_attributes = {
     'email': {
         'type': str,
     },
-    'role': {
-        'type': str,
-        'nested': True,
-        'dict': 'role.value'
-    },
     'state': {
         'type': str,
         'nested': True,

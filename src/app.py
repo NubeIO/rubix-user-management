@@ -1,7 +1,7 @@
 import logging
 import os
 
-from flask import Flask, request
+from flask import Flask
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import event
@@ -41,27 +41,6 @@ def create_app(app_setting) -> Flask:
         cursor = dbapi_connection.cursor()
         cursor.execute("PRAGMA foreign_keys=ON")
         cursor.close()
-
-    @app.before_first_request
-    def create_default_user():
-        import uuid as uuid_
-        from src.models.user.model_user import UserModel
-        from src.models.enum import RoleType, StateType
-        from src.resources.utils import encrypt_password
-        user = UserModel.find_by_username('admin')
-        if not user:
-            uuid = str(uuid_.uuid4())
-            user = UserModel(uuid=uuid, username="admin", password="N00BWires", email="admin@nubeio.com",
-                             role=RoleType.ADMIN, state=StateType.VERIFIED)
-            user.password = encrypt_password(user.password)
-            user.save_to_db()
-
-    @app.before_request
-    def before_request_fn():
-        env: dict = request.environ
-        if not (env.get('REMOTE_ADDR', '') == "127.0.0.1" and "python-requests" in env.get('HTTP_USER_AGENT', '')):
-            from src.resources.utils import authorize
-            authorize()
 
     def register_router(_app) -> Flask:
         from src.routes import bp_system, bp_users, bp_devices

@@ -2,11 +2,11 @@ import uuid as uuid_
 from abc import abstractmethod
 
 from flask_restful import marshal_with, reqparse
-from rubix_http.exceptions.exception import NotFoundException, BadDataException
+from rubix_http.exceptions.exception import NotFoundException, BadDataException, ForbiddenException
 from rubix_http.resource import RubixResource
 from werkzeug.security import check_password_hash
 
-from src.models.enum import StateType, RoleType
+from src.models.enum import StateType
 from src.models.user.model_user import UserModel
 from src.resources.rest_schema.schema_user import user_all_attributes, user_return_fields, user_all_fields_with_children
 from src.resources.utils import encode_jwt_token, encrypt_password, decode_jwt_token, get_access_token
@@ -132,7 +132,15 @@ class UserLoginResource(RubixResource):
         if user is None:
             raise NotFoundException('User not found')
         if user.state == StateType.UNVERIFIED:
-            raise BadDataException('User is not verified')
+            raise ForbiddenException('User is not verified')
         if not check_password_hash(user.password, args['password']):
             raise BadDataException('username and password combination is incorrect')
-        return encode_jwt_token(user.uuid, user.username, user.role == RoleType.ADMIN)
+        return encode_jwt_token(user.uuid, user.username)
+
+
+class UserAuthenticateResource(RubixResource):
+    @classmethod
+    def get(cls):
+        access_token = get_access_token()
+        username = decode_jwt_token(access_token).get('username', '')
+        return {'username': username}

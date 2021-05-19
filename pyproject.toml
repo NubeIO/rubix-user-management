@@ -12,7 +12,7 @@ gevent = [
     { version = "20.12.1", markers = "platform_machine == 'x86_64'" },
     { git = "https://github.com/gevent/gevent.git", tag = "20.12.1", markers = "platform_machine != 'x86_64'" }
 ]
-rubix-http = {git = "https://github.com/NubeIO/rubix-http", rev = "v1.1.1"}
+rubix-http = { git = "https://github.com/NubeIO/rubix-http", rev = "v1.2.0" }
 PyJWT = "^2.1.0"
 
 [tool.poetry.dev-dependencies]
