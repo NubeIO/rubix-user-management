@@ -83,7 +83,6 @@ def parse_user_update():
     parser = reqparse.RequestParser()
     parser.add_argument('first_name', type=str, required=False, store_missing=False)
     parser.add_argument('last_name', type=str, required=False, store_missing=False)
-    parser.add_argument('username', type=str, required=False, store_missing=False)
     parser.add_argument('email', type=str, required=False, store_missing=False)
     args = parser.parse_args()
     return args

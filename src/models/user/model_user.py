@@ -13,9 +13,9 @@ class UserModel(ModelBase):
     uuid = db.Column(db.String(80), primary_key=True, nullable=False)
     first_name = db.Column(db.String(80), nullable=False)
     last_name = db.Column(db.String(80), nullable=False)
-    username = db.Column(db.String(80), nullable=False)
+    username = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(80), nullable=False)
-    email = db.Column(db.String(80), nullable=False)
+    email = db.Column(db.String(80), unique=True, nullable=False)
     state = db.Column(db.Enum(StateType), nullable=False, default=StateType.UNVERIFIED)
     devices = db.relationship('DeviceModel', cascade="all,delete", backref='user', lazy=True)
 
