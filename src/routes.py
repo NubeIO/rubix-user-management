@@ -2,6 +2,7 @@ from flask import Blueprint
 from flask_restful import Api
 
 from src.resources.resource_device import DeviceResourceList, DeviceResourceByUUID
+from src.resources.resource_mqtt_topics import MqttTopicsResource
 from src.resources.resource_user import UserResource
 from src.resources.resource_users import *
 from src.system.resources.ping import Ping
@@ -9,6 +10,7 @@ from src.system.resources.ping import Ping
 bp_system = Blueprint('system', __name__, url_prefix='/api/system')
 bp_users = Blueprint('users', __name__, url_prefix='/api/users')
 bp_user = Blueprint('current_user', __name__, url_prefix='/api/user')
+bp_mqtt_topics = Blueprint('mqtt_topics', __name__, url_prefix='/api/mqtt/topics')
 
 # 1
 Api(bp_system).add_resource(Ping, '/ping')
@@ -31,3 +33,7 @@ api_user = Api(bp_user)
 api_user.add_resource(UserResource, '')
 api_user.add_resource(DeviceResourceList, '/devices')
 api_user.add_resource(DeviceResourceByUUID, '/devices/uuid/<string:uuid>')
+
+# 4
+api_mqtt_topics = Api(bp_mqtt_topics)
+api_mqtt_topics.add_resource(MqttTopicsResource, '')
