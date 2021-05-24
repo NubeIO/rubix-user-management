@@ -8,3 +8,5 @@
     ```bash
     ./setup.sh
     ```
+  
+### [Find Postman collection](https://www.getpostman.com/collections/9e18cddf568f0a57fbaa)
