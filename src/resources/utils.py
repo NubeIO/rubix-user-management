@@ -1,13 +1,17 @@
 import datetime
+import json
 import re
 
 import jwt
+import requests
+from Crypto.Cipher import AES
 from flask import current_app, request
 from flask_restful import fields, reqparse
 from rubix_http.exceptions.exception import UnauthorizedException
 from werkzeug.security import generate_password_hash
 
 from src import AppSetting
+from src.models.enum import FcmDataType
 
 
 def get_field_type(attr_type):
@@ -79,3 +83,34 @@ def parse_user_update():
     parser.add_argument('email', type=str, required=False, store_missing=False)
     args = parser.parse_args()
     return args
+
+
+def aes_encrypt(plaintext) -> bytes:
+    app_setting = current_app.config[AppSetting.FLASK_KEY]
+    secret, key = app_setting.fcm_secret_key.split(':')
+    cipher = AES.new(key.encode('UTF-8'), AES.MODE_CTR, counter=lambda: secret.encode('UTF-8'))
+    return cipher.encrypt(plaintext)
+
+
+def aes_decrypt(ciphertext) -> str:
+    app_setting = current_app.config[AppSetting.FLASK_KEY]
+    secret, key = app_setting.fcm_secret_key.split(':')
+    cipher = AES.new(key.encode('UTF-8'), AES.MODE_CTR, counter=lambda: secret.encode('UTF-8'))
+    return cipher.decrypt(ciphertext).decode('UTF-8')
+
+
+def send_fcm_notification(key, device_id):
+    url = 'https://fcm.googleapis.com/fcm/send'
+    headers = {'Content-type': 'application/json', 'Authorization': f'key={key}'}
+    data = {
+        "to": device_id,
+        "notification": {
+            "title": "NubeIO User Status",
+            "body": "User is verified by Admin!"
+        },
+        "data": {
+            "type": FcmDataType.USER_VERIFICATION.name
+        }
+    }
+    resp = requests.post(url, data=json.dumps(data), headers=headers)
+    return json.loads(resp.content)

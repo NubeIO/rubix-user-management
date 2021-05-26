@@ -35,6 +35,7 @@ class AppSetting:
     fallback_logging_conf: str = 'config/logging.conf'
     fallback_prod_logging_conf: str = 'config/logging.prod.conf'
     default_secret_key_file = 'secret_key.txt'
+    default_fcm_secret_key_file = 'fcm_secret_key.txt'
 
     def __init__(self, **kwargs):
         self.__port = kwargs.get('port') or AppSetting.PORT
@@ -46,6 +47,8 @@ class AppSetting:
         self.__prod = kwargs.get('prod') or False
         self.__secret_key = ''
         self.__secret_key_file = os.path.join(self.__config_dir, self.default_secret_key_file)
+        self.__fcm_secret_key = ''
+        self.__fcm_secret_key_file = os.path.join(self.__config_dir, self.default_fcm_secret_key_file)
 
     @property
     def port(self):
@@ -71,6 +74,10 @@ class AppSetting:
     def secret_key(self) -> str:
         return self.__secret_key
 
+    @property
+    def fcm_secret_key(self) -> str:
+        return self.__fcm_secret_key
+
     def serialize(self, pretty=True) -> str:
         m = {
             'prod': self.prod, 'global_dir': self.global_dir, 'data_dir': self.data_dir, 'config_dir': self.config_dir
@@ -83,6 +90,7 @@ class AppSetting:
 
     def init_app(self, app: Flask):
         self.__secret_key = AppSetting.__handle_secret_key(self.__secret_key_file)
+        self.__fcm_secret_key = AppSetting.__handle_fcm_secret_key(self.__fcm_secret_key_file)
         app.config[AppSetting.FLASK_KEY] = self
         return self
 
@@ -102,10 +110,20 @@ class AppSetting:
         if existing_secret_key.strip():
             return existing_secret_key
 
-        secret_key = AppSetting.__create_secret_key()
+        secret_key = AppSetting.__create_secret_key(24)
         write_file(secret_key_file, secret_key)
         return secret_key
 
     @staticmethod
-    def __create_secret_key():
-        return secrets.token_hex(24)
+    def __handle_fcm_secret_key(fcm_secret_key_file) -> str:
+        existing_secret_key = read_file(fcm_secret_key_file)
+        if existing_secret_key.strip():
+            return existing_secret_key
+
+        secret_key = f'{AppSetting.__create_secret_key(8)}:{AppSetting.__create_secret_key(16)}'
+        write_file(fcm_secret_key_file, secret_key)
+        return secret_key
+
+    @staticmethod
+    def __create_secret_key(_bytes: int):
+        return secrets.token_hex(_bytes)
