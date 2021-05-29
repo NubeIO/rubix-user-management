@@ -2,6 +2,7 @@ import datetime
 import re
 
 import jwt
+from Crypto.Cipher import AES
 from flask import current_app, request
 from flask_restful import fields, reqparse
 from rubix_http.exceptions.exception import UnauthorizedException
@@ -79,3 +80,17 @@ def parse_user_update():
     parser.add_argument('email', type=str, required=False, store_missing=False)
     args = parser.parse_args()
     return args
+
+
+def aes_encrypt(plaintext) -> bytes:
+    app_setting = current_app.config[AppSetting.FLASK_KEY]
+    secret, key = app_setting.fcm_secret_key.split(':')
+    cipher = AES.new(key.encode('UTF-8'), AES.MODE_CTR, counter=lambda: secret.encode('UTF-8'))
+    return cipher.encrypt(plaintext)
+
+
+def aes_decrypt(ciphertext) -> str:
+    app_setting = current_app.config[AppSetting.FLASK_KEY]
+    secret, key = app_setting.fcm_secret_key.split(':')
+    cipher = AES.new(key.encode('UTF-8'), AES.MODE_CTR, counter=lambda: secret.encode('UTF-8'))
+    return cipher.decrypt(ciphertext).decode('UTF-8')

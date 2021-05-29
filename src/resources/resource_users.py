@@ -6,7 +6,9 @@ from rubix_http.exceptions.exception import NotFoundException, BadDataException,
 from rubix_http.resource import RubixResource
 from werkzeug.security import check_password_hash
 
+from src.models.device.model_device import DeviceModel
 from src.models.enum import StateType
+from src.models.fcm_server.model_fcm_server import FcmServerModel
 from src.models.user.model_user import UserModel
 from src.resources.rest_schema.schema_user import user_all_attributes, user_return_fields, user_all_fields_with_children
 from src.resources.utils import encrypt_password, parse_user_update, encode_jwt_token, get_access_token, \
@@ -95,6 +97,7 @@ class UsersVerifyResource(RubixResource):
             raise NotFoundException("User does not exist")
         user.state = StateType.VERIFIED
         user.commit()
+        DeviceModel.send_notification_by_user_uuid(user.uuid, FcmServerModel.get_key())
         return {'message': 'User has been verified successfully'}
 
 
