@@ -23,7 +23,9 @@ class DeviceModel(ModelBase):
     def send_notification_by_user_uuid(cls, user_uuid: str, key: str):
         devices = cls.find_by_user_uuid(user_uuid)
         for device in devices:
-            content = send_fcm_notification(key, device.uuid)
+            content = send_fcm_notification(key, device.device_id)
+            failure: bool = bool(content.get('failure', False))
             results = content.get('results', [])
-            if len(results) > 0 and results[0].get('error') == 'InvalidRegistration':
+            if failure and len(results) > 0 and (
+                    results[0].get('error') == 'InvalidRegistration' or results[0].get('error') == 'NotRegistered'):
                 device.delete_from_db()
