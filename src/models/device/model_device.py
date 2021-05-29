@@ -2,7 +2,7 @@ from sqlalchemy import UniqueConstraint
 
 from src import db
 from src.models.model_base import ModelBase
-from src.resources.utils import send_fcm_notification
+from src.utils.notification import send_fcm_notification
 
 
 class DeviceModel(ModelBase):

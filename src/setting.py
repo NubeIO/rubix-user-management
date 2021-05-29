@@ -36,6 +36,7 @@ class AppSetting:
     fallback_prod_logging_conf: str = 'config/logging.prod.conf'
     default_secret_key_file = 'secret_key.txt'
     default_fcm_secret_key_file = 'fcm_secret_key.txt'
+    default_fcm_url = 'https://fcm.googleapis.com/fcm/send'
 
     def __init__(self, **kwargs):
         self.__port = kwargs.get('port') or AppSetting.PORT

@@ -1,6 +1,7 @@
 import uuid as uuid_
 
 from flask_restful import reqparse
+from rubix_http.exceptions.exception import NotFoundException
 from rubix_http.resource import RubixResource
 
 from src.models.fcm_server.model_fcm_server import FcmServerModel
@@ -16,6 +17,13 @@ class FcmServerResource(RubixResource):
                             required=fcm_server_all_attributes[attr].get('required', False),
                             help=fcm_server_all_attributes[attr].get('help', None),
                             store_missing=False)
+
+    @classmethod
+    def get(cls):
+        key = FcmServerModel.get_key()
+        if not key:
+            raise NotFoundException("Fcm server does not exist")
+        return {"key": f"***{key[-4:]}"}
 
     @classmethod
     def post(cls):
