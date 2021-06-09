@@ -50,13 +50,13 @@ def create_app(app_setting) -> Flask:
             authorize()
 
     def register_router(_app) -> Flask:
-        from src.routes import bp_system, bp_users, bp_fcm_server, bp_apps_users, bp_apps_own_users, bp_api_apps_configs
+        from src.routes import bp_system, bp_users_summary, bp_fcm_server, bp_users, bp_own_users, bp_configs
         _app.register_blueprint(bp_system)
-        _app.register_blueprint(bp_users)
+        _app.register_blueprint(bp_users_summary)
         _app.register_blueprint(bp_fcm_server)
-        _app.register_blueprint(bp_apps_users)
-        _app.register_blueprint(bp_apps_own_users)
-        _app.register_blueprint(bp_api_apps_configs)
+        _app.register_blueprint(bp_users)
+        _app.register_blueprint(bp_own_users)
+        _app.register_blueprint(bp_configs)
         return _app
 
     setup(app)

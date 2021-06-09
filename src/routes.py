@@ -9,26 +9,28 @@ from src.resources.third_party.resource_user import UserResource
 from src.resources.third_party.resource_users import *
 from src.system.resources.ping import Ping
 
+# Admin
 bp_system = Blueprint('system', __name__, url_prefix='/api/system')
-bp_users = Blueprint('users', __name__, url_prefix='/api/users')
+bp_users_summary = Blueprint('users_summary', __name__, url_prefix='/api/users')
 bp_fcm_server = Blueprint('fcm_server', __name__, url_prefix='/api/fcm_server')
 
-bp_apps_users = Blueprint('apps_users', __name__, url_prefix='/api/apps/users')
-bp_apps_own_users = Blueprint('apps_own_users', __name__, url_prefix='/api/apps/o/users')
-bp_api_apps_configs = Blueprint('apps_configs', __name__, url_prefix='/api/apps/c')
+# Apps
+bp_users = Blueprint('users', __name__, url_prefix='/api/apps/users')
+bp_own_users = Blueprint('own_users', __name__, url_prefix='/api/apps/o/users')
+bp_configs = Blueprint('configs', __name__, url_prefix='/api/apps/c')
 
 # 1 => Admin
 Api(bp_system).add_resource(Ping, '/ping')
 
-# 2
-api_users = Api(bp_users)
+# 2 => Apps
+api_users = Api(bp_users_summary)
 api_users.add_resource(UsersResourceList, '')
 api_users.add_resource(UsersResourceByUUID, '/uuid/<string:uuid>')
 api_users.add_resource(UsersResourceByUsername, '/username/<string:username>')
 api_users.add_resource(UsersVerifyResource, '/verify')
 
-# 3
-api_apps_users = Api(bp_apps_users)
+# 3 => Apps
+api_apps_users = Api(bp_users)
 api_apps_users.add_resource(UsersCreateResource, '', endpoint="create")
 api_apps_users.add_resource(UsersLoginResource, '/login', endpoint="login")
 api_apps_users.add_resource(UsersChangePasswordResource, '/change_password')
@@ -36,14 +38,14 @@ api_apps_users.add_resource(UsersCheckByUsernameResource, '/check/username', end
 api_apps_users.add_resource(UsersCheckByEmailResource, '/check/email', endpoint='check_email')
 api_apps_users.add_resource(UsersRefreshToken, '/refresh_token')
 
-# 4
-api_apps_own_users = Api(bp_apps_own_users)
+# 4 => Apps
+api_apps_own_users = Api(bp_own_users)
 api_apps_own_users.add_resource(UserResource, '')
 api_apps_own_users.add_resource(DeviceResourceList, '/devices')
 api_apps_own_users.add_resource(DeviceResourceByUUID, '/devices/uuid/<string:uuid>')
 
-# 5
-api_apps_configs = Api(bp_api_apps_configs)
+# 5 => Apps
+api_apps_configs = Api(bp_configs)
 api_apps_configs.add_resource(MqttConfigResource, '/mqtt')
 api_apps_configs.add_resource(MqttTopicsResource, '/mqtt/topics')
 

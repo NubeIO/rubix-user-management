@@ -26,7 +26,7 @@ class FcmServerResource(RubixResource):
         return {"key": f"***{key[-4:]}"}
 
     @classmethod
-    def post(cls):
+    def put(cls):
         args = cls.parser.parse_args()
         args['key'] = aes_encrypt(args['key'])
         fcm_server = FcmServerModel.find_one()

@@ -98,9 +98,8 @@ def aes_decrypt(ciphertext) -> str:
 
 
 def authorize():
-    open_endpoints: List[str] = ['apps_users.create', 'apps_users.login', 'apps_users.check_username',
-                                 'apps_users.check_email']
-    if request.path[:9] != '/api/apps':
+    open_endpoints: List[str] = ['users.create', 'users.login', 'users.check_username', 'users.check_email']
+    if request.path[:10] != '/api/apps/':
         abort(401, message=str('You are not authorized!'))
     elif request.endpoint not in open_endpoints:
         try:
