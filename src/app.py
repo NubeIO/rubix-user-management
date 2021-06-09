@@ -50,14 +50,13 @@ def create_app(app_setting) -> Flask:
             authorize()
 
     def register_router(_app) -> Flask:
-        from src.routes import bp_system, bp_users, bp_fcm_server, bp_apps_users, bp_apps_current_users, \
-            bp_apps_mqtt_topics
+        from src.routes import bp_system, bp_users, bp_fcm_server, bp_apps_users, bp_apps_own_users, bp_api_apps_configs
         _app.register_blueprint(bp_system)
         _app.register_blueprint(bp_users)
         _app.register_blueprint(bp_fcm_server)
         _app.register_blueprint(bp_apps_users)
-        _app.register_blueprint(bp_apps_current_users)
-        _app.register_blueprint(bp_apps_mqtt_topics)
+        _app.register_blueprint(bp_apps_own_users)
+        _app.register_blueprint(bp_api_apps_configs)
         return _app
 
     setup(app)

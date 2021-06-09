@@ -4,7 +4,7 @@ from flask_restful import Api
 from src.resources.admin.resource_fcm_server import FcmServerResource
 from src.resources.admin.resource_users import *
 from src.resources.third_party.resource_device import DeviceResourceList, DeviceResourceByUUID
-from src.resources.third_party.resource_mqtt_topics import MqttTopicsResource
+from src.resources.third_party.resource_mqtt import MqttTopicsResource, MqttConfigResource
 from src.resources.third_party.resource_user import UserResource
 from src.resources.third_party.resource_users import *
 from src.system.resources.ping import Ping
@@ -14,8 +14,8 @@ bp_users = Blueprint('users', __name__, url_prefix='/api/users')
 bp_fcm_server = Blueprint('fcm_server', __name__, url_prefix='/api/fcm_server')
 
 bp_apps_users = Blueprint('apps_users', __name__, url_prefix='/api/apps/users')
-bp_apps_current_users = Blueprint('apps_users_current', __name__, url_prefix='/api/apps/c/users')
-bp_apps_mqtt_topics = Blueprint('apps_mqtt_topics', __name__, url_prefix='/api/apps/mqtt/topics')
+bp_apps_own_users = Blueprint('apps_own_users', __name__, url_prefix='/api/apps/o/users')
+bp_api_apps_configs = Blueprint('apps_configs', __name__, url_prefix='/api/apps/c')
 
 # 1 => Admin
 Api(bp_system).add_resource(Ping, '/ping')
@@ -37,14 +37,15 @@ api_apps_users.add_resource(UsersCheckByEmailResource, '/check/email', endpoint=
 api_apps_users.add_resource(UsersRefreshToken, '/refresh_token')
 
 # 4
-api_apps_users_current = Api(bp_apps_current_users)
-api_apps_users_current.add_resource(UserResource, '')
-api_apps_users_current.add_resource(DeviceResourceList, '/devices')
-api_apps_users_current.add_resource(DeviceResourceByUUID, '/devices/uuid/<string:uuid>')
+api_apps_own_users = Api(bp_apps_own_users)
+api_apps_own_users.add_resource(UserResource, '')
+api_apps_own_users.add_resource(DeviceResourceList, '/devices')
+api_apps_own_users.add_resource(DeviceResourceByUUID, '/devices/uuid/<string:uuid>')
 
 # 5
-api_apps_mqtt_topics = Api(bp_apps_mqtt_topics)
-api_apps_mqtt_topics.add_resource(MqttTopicsResource, '')
+api_apps_configs = Api(bp_api_apps_configs)
+api_apps_configs.add_resource(MqttConfigResource, '/mqtt')
+api_apps_configs.add_resource(MqttTopicsResource, '/mqtt/topics')
 
 # 6 => Admin
 api_fcm_server = Api(bp_fcm_server)
