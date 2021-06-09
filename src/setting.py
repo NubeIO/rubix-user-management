@@ -33,7 +33,7 @@ class AppSetting:
     default_setting_file: str = 'config.json'
     default_logging_conf: str = 'logging.conf'
     fallback_logging_conf: str = 'config/logging.conf'
-    fallback_prod_logging_conf: str = 'config/logging.prod.conf'
+    fallback_logging_prod_conf: str = 'config/logging.prod.conf'
     default_secret_key_file = 'secret_key.txt'
     default_fcm_secret_key_file = 'fcm_secret_key.txt'
     default_fcm_url = 'https://fcm.googleapis.com/fcm/send'
