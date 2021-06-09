@@ -1,45 +1,51 @@
 from flask import Blueprint
 from flask_restful import Api
 
-from src.resources.resource_device import DeviceResourceList, DeviceResourceByUUID
-from src.resources.resource_fcm_server import FcmServerResource
-from src.resources.resource_mqtt_topics import MqttTopicsResource
-from src.resources.resource_user import UserResource
-from src.resources.resource_users import *
+from src.resources.admin.resource_fcm_server import FcmServerResource
+from src.resources.admin.resource_users import *
+from src.resources.third_party.resource_device import DeviceResourceList, DeviceResourceByUUID
+from src.resources.third_party.resource_mqtt_topics import MqttTopicsResource
+from src.resources.third_party.resource_user import UserResource
+from src.resources.third_party.resource_users import *
 from src.system.resources.ping import Ping
 
 bp_system = Blueprint('system', __name__, url_prefix='/api/system')
 bp_users = Blueprint('users', __name__, url_prefix='/api/users')
-bp_user = Blueprint('current_user', __name__, url_prefix='/api/user')
-bp_mqtt_topics = Blueprint('mqtt_topics', __name__, url_prefix='/api/mqtt/topics')
 bp_fcm_server = Blueprint('fcm_server', __name__, url_prefix='/api/fcm_server')
 
-# 1
+bp_apps_users = Blueprint('apps_users', __name__, url_prefix='/api/apps/users')
+bp_apps_current_users = Blueprint('apps_users_current', __name__, url_prefix='/api/apps/c/users')
+bp_apps_mqtt_topics = Blueprint('apps_mqtt_topics', __name__, url_prefix='/api/apps/mqtt/topics')
+
+# 1 => Admin
 Api(bp_system).add_resource(Ping, '/ping')
 
 # 2
 api_users = Api(bp_users)
 api_users.add_resource(UsersResourceList, '')
-api_users.add_resource(UsersLoginResource, '/login')
-api_users.add_resource(UsersChangePasswordResource, '/change_password')
 api_users.add_resource(UsersResourceByUUID, '/uuid/<string:uuid>')
 api_users.add_resource(UsersResourceByUsername, '/username/<string:username>')
 api_users.add_resource(UsersVerifyResource, '/verify')
-api_users.add_resource(UsersCheckByUsernameResource, '/check/username')
-api_users.add_resource(UsersCheckByEmailResource, '/check/email')
-api_users.add_resource(UsersAuthenticateResource, '/authenticate')
-api_users.add_resource(UsersRefreshToken, '/refresh_token')
 
 # 3
-api_user = Api(bp_user)
-api_user.add_resource(UserResource, '')
-api_user.add_resource(DeviceResourceList, '/devices')
-api_user.add_resource(DeviceResourceByUUID, '/devices/uuid/<string:uuid>')
+api_apps_users = Api(bp_apps_users)
+api_apps_users.add_resource(UsersCreateResource, '', endpoint="create")
+api_apps_users.add_resource(UsersLoginResource, '/login', endpoint="login")
+api_apps_users.add_resource(UsersChangePasswordResource, '/change_password')
+api_apps_users.add_resource(UsersCheckByUsernameResource, '/check/username', endpoint='check_username')
+api_apps_users.add_resource(UsersCheckByEmailResource, '/check/email', endpoint='check_email')
+api_apps_users.add_resource(UsersRefreshToken, '/refresh_token')
 
 # 4
-api_mqtt_topics = Api(bp_mqtt_topics)
-api_mqtt_topics.add_resource(MqttTopicsResource, '')
+api_apps_users_current = Api(bp_apps_current_users)
+api_apps_users_current.add_resource(UserResource, '')
+api_apps_users_current.add_resource(DeviceResourceList, '/devices')
+api_apps_users_current.add_resource(DeviceResourceByUUID, '/devices/uuid/<string:uuid>')
 
 # 5
+api_apps_mqtt_topics = Api(bp_apps_mqtt_topics)
+api_apps_mqtt_topics.add_resource(MqttTopicsResource, '')
+
+# 6 => Admin
 api_fcm_server = Api(bp_fcm_server)
 api_fcm_server.add_resource(FcmServerResource, '')

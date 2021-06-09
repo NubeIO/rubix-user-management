@@ -2,8 +2,8 @@ from copy import deepcopy
 
 from flask_restful import fields
 
-from src.resources.rest_schema.schema_device import device_nested_return_fields
 from src.resources.utils import map_rest_schema
+from src.rest_schema.schema_device import device_nested_return_fields
 
 user_all_attributes = {
     'first_name': {

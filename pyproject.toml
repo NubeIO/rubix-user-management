@@ -12,7 +12,7 @@ gevent = [
     { version = "20.12.1", markers = "platform_machine == 'x86_64'" },
     { git = "https://github.com/gevent/gevent.git", tag = "20.12.1", markers = "platform_machine != 'x86_64'" }
 ]
-rubix-http = { git = "https://github.com/NubeIO/rubix-http", rev = "v1.2.0" }
+rubix-http = { git = "https://github.com/NubeIO/rubix-http", rev = "v1.3.0" }
 PyJWT = "^2.1.0"
 rubix-registry = { git = "https://github.com/NubeIO/rubix-registry", rev = "v1.0.0" }
 pycrypto = "^2.6.1"

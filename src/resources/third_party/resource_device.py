@@ -5,8 +5,8 @@ from rubix_http.exceptions.exception import NotFoundException
 from rubix_http.resource import RubixResource
 
 from src.models.device.model_device import DeviceModel
-from src.resources.rest_schema.schema_device import device_all_attributes, device_return_fields
 from src.resources.utils import get_access_token, decode_jwt_token
+from src.rest_schema.schema_device import device_all_attributes, device_return_fields
 
 
 class DeviceResourceList(RubixResource):
