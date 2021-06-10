@@ -2,6 +2,9 @@ from flask import Blueprint
 from flask_restful import Api
 
 from src.resources.admin.resource_fcm_server import FcmServerResource
+from src.resources.admin.resource_site import SiteResourceList, SiteResourceByUUID
+from src.resources.admin.resource_user_site import UserSiteResourceList, UserSiteResourceByUUID, \
+    UserSiteResourceByUserUUID
 from src.resources.admin.resource_users import *
 from src.resources.third_party.resource_device import DeviceResourceList, DeviceResourceByUUID
 from src.resources.third_party.resource_mqtt import MqttTopicsResource, MqttConfigResource
@@ -13,6 +16,7 @@ from src.system.resources.ping import Ping
 bp_system = Blueprint('system', __name__, url_prefix='/api/system')
 bp_users_summary = Blueprint('users_summary', __name__, url_prefix='/api/users')
 bp_fcm_server = Blueprint('fcm_server', __name__, url_prefix='/api/fcm_server')
+bp_sites = Blueprint('sites', __name__, url_prefix='/api/sites')
 
 # Apps
 bp_users = Blueprint('users', __name__, url_prefix='/api/apps/users')
@@ -28,6 +32,9 @@ api_users.add_resource(UsersResourceList, '')
 api_users.add_resource(UsersResourceByUUID, '/uuid/<string:uuid>')
 api_users.add_resource(UsersResourceByUsername, '/username/<string:username>')
 api_users.add_resource(UsersVerifyResource, '/verify')
+api_users.add_resource(UserSiteResourceList, '/sites')
+api_users.add_resource(UserSiteResourceByUUID, '/sites/uuid/<string:uuid>')
+api_users.add_resource(UserSiteResourceByUserUUID, '/sites/user_uuid/<string:user_uuid>')
 
 # 3 => Apps
 api_apps_users = Api(bp_users)
@@ -52,3 +59,8 @@ api_apps_configs.add_resource(MqttTopicsResource, '/mqtt/topics')
 # 6 => Admin
 api_fcm_server = Api(bp_fcm_server)
 api_fcm_server.add_resource(FcmServerResource, '')
+
+# 7 => Admin
+api_sites = Api(bp_sites)
+api_sites.add_resource(SiteResourceList, '')
+api_sites.add_resource(SiteResourceByUUID, '/uuid/<string:uuid>')

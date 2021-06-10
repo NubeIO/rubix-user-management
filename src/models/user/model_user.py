@@ -18,6 +18,7 @@ class UserModel(ModelBase):
     email = db.Column(db.String(80), unique=True, nullable=False)
     state = db.Column(db.Enum(StateType), nullable=False, default=StateType.UNVERIFIED)
     devices = db.relationship('DeviceModel', cascade="all,delete", backref='user', lazy=True)
+    sites = db.relationship('UserSiteModel', cascade="all,delete", backref="user", lazy=True)
 
     __table_args__ = (
         UniqueConstraint('username'),
