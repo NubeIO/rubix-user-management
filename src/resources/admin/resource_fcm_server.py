@@ -5,8 +5,8 @@ from rubix_http.exceptions.exception import NotFoundException
 from rubix_http.resource import RubixResource
 
 from src.models.fcm_server.model_fcm_server import FcmServerModel
-from src.resources.rest_schema.schema_fcm_server import fcm_server_all_attributes
 from src.resources.utils import aes_encrypt
+from src.rest_schema.schema_fcm_server import fcm_server_all_attributes
 
 
 class FcmServerResource(RubixResource):
@@ -26,7 +26,7 @@ class FcmServerResource(RubixResource):
         return {"key": f"***{key[-4:]}"}
 
     @classmethod
-    def post(cls):
+    def put(cls):
         args = cls.parser.parse_args()
         args['key'] = aes_encrypt(args['key'])
         fcm_server = FcmServerModel.find_one()

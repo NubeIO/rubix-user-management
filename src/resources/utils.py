@@ -1,10 +1,11 @@
 import datetime
 import re
+from typing import List
 
 import jwt
 from Crypto.Cipher import AES
 from flask import current_app, request
-from flask_restful import fields, reqparse
+from flask_restful import fields, reqparse, abort
 from rubix_http.exceptions.exception import UnauthorizedException
 from werkzeug.security import generate_password_hash
 
@@ -39,7 +40,7 @@ def map_rest_schema(schema, resource_fields):
 def encode_jwt_token(uuid: str, username: str):
     app_setting = current_app.config[AppSetting.FLASK_KEY]
     payload = {
-        'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=1),
+        'exp': datetime.datetime.utcnow() + datetime.timedelta(days=7),
         'iat': datetime.datetime.utcnow(),
         'sub': uuid,
         'username': username
@@ -94,3 +95,15 @@ def aes_decrypt(ciphertext) -> str:
     secret, key = app_setting.fcm_secret_key.split(':')
     cipher = AES.new(key.encode('UTF-8'), AES.MODE_CTR, counter=lambda: secret.encode('UTF-8'))
     return cipher.decrypt(ciphertext).decode('UTF-8')
+
+
+def authorize():
+    open_endpoints: List[str] = ['users.create', 'users.login', 'users.check_username', 'users.check_email']
+    if request.path[:10] != '/api/apps/':
+        abort(401, message=str('You are not authorized!'))
+    elif request.endpoint not in open_endpoints:
+        try:
+            access_token = get_access_token()
+            decode_jwt_token(access_token)
+        except Exception as e:
+            abort(401, message=str(e))

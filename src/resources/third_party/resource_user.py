@@ -3,8 +3,8 @@ from rubix_http.exceptions.exception import NotFoundException
 from rubix_http.resource import RubixResource
 
 from src.models.user.model_user import UserModel
-from src.resources.rest_schema.schema_user import user_all_fields_with_children, user_all_fields
 from src.resources.utils import get_access_token, decode_jwt_token, parse_user_update
+from src.rest_schema.schema_user import user_all_fields, user_all_fields_with_children
 
 
 class UserResource(RubixResource):

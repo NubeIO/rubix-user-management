@@ -1,7 +1,7 @@
 import logging
 import os
 
-from flask import Flask
+from flask import Flask, request
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import event
@@ -42,13 +42,21 @@ def create_app(app_setting) -> Flask:
         cursor.execute("PRAGMA foreign_keys=ON")
         cursor.close()
 
+    @app.before_request
+    def before_request_fn():
+        env: dict = request.environ
+        if not (env.get('REMOTE_ADDR', '') == "127.0.0.1" and "python-requests" in env.get('HTTP_USER_AGENT', '')):
+            from src.resources.utils import authorize
+            authorize()
+
     def register_router(_app) -> Flask:
-        from src.routes import bp_system, bp_users, bp_user, bp_mqtt_topics, bp_fcm_server
+        from src.routes import bp_system, bp_users_summary, bp_fcm_server, bp_users, bp_own_users, bp_configs
         _app.register_blueprint(bp_system)
-        _app.register_blueprint(bp_users)
-        _app.register_blueprint(bp_user)
-        _app.register_blueprint(bp_mqtt_topics)
+        _app.register_blueprint(bp_users_summary)
         _app.register_blueprint(bp_fcm_server)
+        _app.register_blueprint(bp_users)
+        _app.register_blueprint(bp_own_users)
+        _app.register_blueprint(bp_configs)
         return _app
 
     setup(app)
