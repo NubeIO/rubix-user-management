@@ -47,7 +47,7 @@ user_return_attributes = {
     'state': {
         'type': str,
         'nested': True,
-        'dict': 'state.value'
+        'dict': 'state.name'
     }
 }
 
