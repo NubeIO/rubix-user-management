@@ -17,3 +17,7 @@ class UserSiteModel(ModelBase):
     @classmethod
     def find_by_user_uuid(cls, user_uuid: str):
         return cls.query.filter_by(user_uuid=user_uuid).all()
+
+    @classmethod
+    def find_by_site_uuid(cls, site_uuid: str):
+        return cls.query.filter_by(site_uuid=site_uuid).all()
