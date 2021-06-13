@@ -5,7 +5,7 @@ from rubix_http.exceptions.exception import NotFoundException
 from rubix_http.resource import RubixResource
 
 from src.models.device.model_device import DeviceModel
-from src.models.enum import StateType
+from src.models.enum import StateType, FcmDataType
 from src.models.fcm_server.model_fcm_server import FcmServerModel
 from src.models.user.model_user import UserModel
 from src.resources.utils import parse_user_update
@@ -77,5 +77,15 @@ class UsersVerifyResource(RubixResource):
             raise NotFoundException("User does not exist")
         user.state = StateType.VERIFIED
         user.commit()
-        DeviceModel.send_notification_by_user_uuid(user.uuid, FcmServerModel.get_key())
+        data = {
+            "to": "",
+            "notification": {
+                "title": "NubeIO User Status",
+                "body": "User is verified by Admin!"
+            },
+            "data": {
+                "type": FcmDataType.USER_VERIFICATION.name
+            }
+        }
+        DeviceModel.send_notification_by_user_uuid(user.uuid, FcmServerModel.get_key(), data)
         return {'message': 'User has been verified successfully'}

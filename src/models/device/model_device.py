@@ -20,10 +20,12 @@ class DeviceModel(ModelBase):
         return cls.query.filter_by(user_uuid=user_uuid).all()
 
     @classmethod
-    def send_notification_by_user_uuid(cls, user_uuid: str, key: str):
+    def send_notification_by_user_uuid(cls, user_uuid: str, key: str, data: dict):
         devices = cls.find_by_user_uuid(user_uuid)
         for device in devices:
-            content = send_fcm_notification(key, device.device_id)
+            if 'to' in data:
+                data['to'] = device.device_id
+            content = send_fcm_notification(key, data)
             failure: bool = bool(content.get('failure', False))
             results = content.get('results', [])
             if failure and len(results) > 0 and (

@@ -4,6 +4,7 @@ from flask_restful import fields
 
 from src.resources.utils import map_rest_schema
 from src.rest_schema.schema_device import device_nested_return_fields
+from src.rest_schema.schema_user_site import user_site_nested_return_fields
 
 user_all_attributes = {
     'first_name': {
@@ -59,7 +60,8 @@ map_rest_schema(user_all_attributes, user_all_fields)
 map_rest_schema(user_return_attributes, user_all_fields)
 
 user_all_fields_with_children_base = {
-    'devices': fields.List(fields.Nested(device_nested_return_fields))
+    'devices': fields.List(fields.Nested(device_nested_return_fields)),
+    'sites': fields.List(fields.Nested(user_site_nested_return_fields))
 }
 user_all_fields_with_children = deepcopy(user_return_fields)
 user_all_fields_with_children.update(user_all_fields_with_children_base)
