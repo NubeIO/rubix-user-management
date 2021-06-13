@@ -3,8 +3,7 @@ from flask_restful import Api
 
 from src.resources.admin.resource_fcm_server import FcmServerResource
 from src.resources.admin.resource_site import SiteResourceList, SiteResourceByUUID
-from src.resources.admin.resource_user_site import UserSiteResourceList, UserSiteResourceByUUID, \
-    UserSiteResourceByUserUUID
+from src.resources.admin.resource_user_site import UserSiteResourceList, UserSiteResourceByUUID
 from src.resources.admin.resource_users import *
 from src.resources.third_party.resource_device import DeviceResourceList, DeviceResourceByUUID
 from src.resources.third_party.resource_mqtt import MqttTopicsResource, MqttConfigResource
@@ -34,7 +33,6 @@ api_users.add_resource(UsersResourceByUsername, '/username/<string:username>')
 api_users.add_resource(UsersVerifyResource, '/verify')
 api_users.add_resource(UserSiteResourceList, '/sites')
 api_users.add_resource(UserSiteResourceByUUID, '/sites/uuid/<string:uuid>')
-api_users.add_resource(UserSiteResourceByUserUUID, '/sites/user_uuid/<string:user_uuid>')
 
 # 3 => Apps
 api_apps_users = Api(bp_users)

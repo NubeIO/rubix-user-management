@@ -38,8 +38,8 @@ class MqttAlertListener(MqttClientBase):
     def _on_message(self, client, userdata, message: MQTTMessage):
         logger.debug(f'Listener Topic: {message.topic}, Message: {message.payload}')
         with self.__app_context():
-            data = json.loads(message.payload)
-            if len(data.get('alerts', [])) == 0:
+            alerts = json.loads(message.payload).get('alerts', [])
+            if len(alerts) == 0:
                 return
             topic_parts = message.topic.split(self.SEPARATOR)
             if len(topic_parts) == len(self.make_topic().split(self.SEPARATOR)):
@@ -47,7 +47,18 @@ class MqttAlertListener(MqttClientBase):
                 from src.models.user_site.model_user_site import UserSiteModel
                 site_users = UserSiteModel.find_by_site_uuid(site_uuid)
                 for user in site_users:
-                    gevent.spawn(self.send_notification(user.user_uuid, data, self.__app_context))
+                    for alert in alerts:
+                        title = alert.get("title")
+                        subtitle = alert.get("subtitle")
+                        if title and subtitle:
+                            data = {
+                                "to": "",
+                                "notification": {
+                                    "title": title,
+                                    "body": subtitle
+                                }
+                            }
+                            gevent.spawn(self.send_notification(user.user_uuid, data, self.__app_context))
 
     @classmethod
     def send_notification(cls, user_uuid: str, data: dict, app_context):

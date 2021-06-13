@@ -32,41 +32,19 @@ class UserSiteResourceList(RubixResource):
         return user_site
 
 
-class UserSiteResourceByUserUUID(RubixResource):
-    @classmethod
-    @marshal_with(user_site_return_fields)
-    def get(cls, user_uuid):
-        user_site: UserSiteModel = UserSiteModel.find_by_user_uuid(user_uuid)
-        if user_site is None:
-            raise NotFoundException('User site not found')
-        return user_site
-
-
 class UserSiteResourceByUUID(RubixResource):
     @classmethod
     @marshal_with(user_site_return_fields)
     def get(cls, uuid):
         user_site: UserSiteModel = UserSiteModel.find_by_uuid(uuid)
         if user_site is None:
-            raise NotFoundException('User site not found')
-        return user_site
-
-    @classmethod
-    @marshal_with(user_site_return_fields)
-    def patch(cls, uuid):
-        parser = reqparse.RequestParser()
-        parser.add_argument('site_uuid', type=str, required=False, store_missing=False)
-        args = parser.parse_args()
-        user_site: UserSiteModel = UserSiteModel.find_by_uuid(uuid)
-        if user_site is None:
-            raise NotFoundException("User site not found")
-        user_site.update(**args)
+            raise NotFoundException("Given UUID doesn't exist on users_sites relation")
         return user_site
 
     @classmethod
     def delete(cls, uuid):
         user_site: UserSiteModel = UserSiteModel.find_by_uuid(uuid)
         if user_site is None:
-            raise NotFoundException("User site not found")
+            raise NotFoundException("Given UUID doesn't exist on users_sites relation")
         user_site.delete_from_db()
         return '', 204

@@ -14,3 +14,4 @@ class SiteModel(ModelBase):
     lat = db.Column(db.String(80), nullable=True)
     lon = db.Column(db.String(80), nullable=True)
     time_zone = db.Column(db.String(80), nullable=True)
+    users = db.relationship('UserSiteModel', cascade="all,delete", backref="site", lazy=True)
