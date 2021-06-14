@@ -8,6 +8,7 @@ from src.resources.admin.resource_users import *
 from src.resources.third_party.resource_device import DeviceResourceList, DeviceResourceByUUID, \
     DeviceResourceByDeviceId
 from src.resources.third_party.resource_mqtt import MqttTopicsResource, MqttConfigResource
+from src.resources.third_party.resource_own_user_sites import OwnUserSitesResourceList
 from src.resources.third_party.resource_user import UserResource
 from src.resources.third_party.resource_users import *
 from src.system.resources.ping import Ping
@@ -50,6 +51,7 @@ api_apps_own_users.add_resource(UserResource, '')
 api_apps_own_users.add_resource(DeviceResourceList, '/devices')
 api_apps_own_users.add_resource(DeviceResourceByUUID, '/devices/uuid/<string:uuid>')
 api_apps_own_users.add_resource(DeviceResourceByDeviceId, '/devices/device_id/<string:device_id>')
+api_apps_own_users.add_resource(OwnUserSitesResourceList, '/sites')
 
 # 5 => Apps
 api_apps_configs = Api(bp_configs)
