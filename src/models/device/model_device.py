@@ -20,6 +20,10 @@ class DeviceModel(ModelBase):
         return cls.query.filter_by(user_uuid=user_uuid).all()
 
     @classmethod
+    def find_by_user_uuid_and_device_id(cls, user_uuid: str, device_id):
+        return cls.query.filter_by(user_uuid=user_uuid, device_id=device_id).all()
+
+    @classmethod
     def send_notification_by_user_uuid(cls, user_uuid: str, key: str, data: dict):
         devices = cls.find_by_user_uuid(user_uuid)
         for device in devices:
