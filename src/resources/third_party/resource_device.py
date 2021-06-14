@@ -31,7 +31,7 @@ class DeviceResourceList(RubixResource):
         args = cls.parser.parse_args()
         uuid = str(shortuuid.uuid())
         user_uuid = decode_jwt_token(access_token).get('sub', '')
-        device = DeviceModel.find_all_by_user_uuid_and_device_id(user_uuid, args['device_id'])
+        device = DeviceModel.find_by_user_uuid_and_device_id(user_uuid, args['device_id'])
         if device:
             return device
         device = DeviceModel(uuid=uuid, user_uuid=user_uuid, **args)

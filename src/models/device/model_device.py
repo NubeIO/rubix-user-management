@@ -20,12 +20,12 @@ class DeviceModel(ModelBase):
         return cls.query.filter_by(device_id=device_id).first()
 
     @classmethod
-    def find_all_by_user_uuid(cls, user_uuid: str):
-        return cls.query.filter_by(user_uuid=user_uuid).all()
+    def find_by_user_uuid_and_device_id(cls, user_uuid: str, device_id):
+        return cls.query.filter_by(user_uuid=user_uuid, device_id=device_id).first()
 
     @classmethod
-    def find_all_by_user_uuid_and_device_id(cls, user_uuid: str, device_id):
-        return cls.query.filter_by(user_uuid=user_uuid, device_id=device_id).all()
+    def find_all_by_user_uuid(cls, user_uuid: str):
+        return cls.query.filter_by(user_uuid=user_uuid).all()
 
     @classmethod
     def send_notification_by_user_uuid(cls, user_uuid: str, key: str, data: dict):
