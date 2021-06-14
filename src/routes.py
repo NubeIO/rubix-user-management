@@ -5,7 +5,8 @@ from src.resources.admin.resource_fcm_server import FcmServerResource
 from src.resources.admin.resource_site import SiteResourceList, SiteResourceByUUID
 from src.resources.admin.resource_user_site import UserSiteResourceList, UserSiteResourceByUUID
 from src.resources.admin.resource_users import *
-from src.resources.third_party.resource_device import DeviceResourceList, DeviceResourceByUUID
+from src.resources.third_party.resource_device import DeviceResourceList, DeviceResourceByUUID, \
+    DeviceResourceByDeviceId
 from src.resources.third_party.resource_mqtt import MqttTopicsResource, MqttConfigResource
 from src.resources.third_party.resource_user import UserResource
 from src.resources.third_party.resource_users import *
@@ -48,6 +49,7 @@ api_apps_own_users = Api(bp_own_users)
 api_apps_own_users.add_resource(UserResource, '')
 api_apps_own_users.add_resource(DeviceResourceList, '/devices')
 api_apps_own_users.add_resource(DeviceResourceByUUID, '/devices/uuid/<string:uuid>')
+api_apps_own_users.add_resource(DeviceResourceByDeviceId, '/devices/device_id/<string:device_id>')
 
 # 5 => Apps
 api_apps_configs = Api(bp_configs)

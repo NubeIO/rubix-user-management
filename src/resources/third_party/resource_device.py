@@ -22,7 +22,7 @@ class DeviceResourceList(RubixResource):
     def get(cls):
         access_token = get_access_token()
         user_uuid = decode_jwt_token(access_token).get('sub', '')
-        return DeviceModel.find_by_user_uuid(user_uuid=user_uuid)
+        return DeviceModel.find_all_by_user_uuid(user_uuid=user_uuid)
 
     @classmethod
     @marshal_with(device_return_fields)
@@ -31,7 +31,7 @@ class DeviceResourceList(RubixResource):
         args = cls.parser.parse_args()
         uuid = str(shortuuid.uuid())
         user_uuid = decode_jwt_token(access_token).get('sub', '')
-        device = DeviceModel.find_by_user_uuid_and_device_id(user_uuid, args['device_id'])
+        device = DeviceModel.find_all_by_user_uuid_and_device_id(user_uuid, args['device_id'])
         if device:
             return device
         device = DeviceModel(uuid=uuid, user_uuid=user_uuid, **args)
@@ -65,5 +65,15 @@ class DeviceResourceByUUID(RubixResource):
         device: DeviceModel = DeviceModel.find_by_uuid(uuid)
         if device is None:
             raise NotFoundException("Device not found")
+        device.delete_from_db()
+        return '', 204
+
+
+class DeviceResourceByDeviceId(RubixResource):
+    @classmethod
+    def delete(cls, device_id):
+        device: DeviceModel = DeviceModel.find_by_device_id(device_id)
+        if device is None:
+            return '', 204  # we are not throwing error even though we didn't match the device_uuid
         device.delete_from_db()
         return '', 204
