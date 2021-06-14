@@ -1,4 +1,4 @@
-import uuid as uuid_
+import shortuuid
 
 from flask_restful import marshal_with, reqparse
 from rubix_http.exceptions.exception import NotFoundException
@@ -30,7 +30,7 @@ class DeviceResourceList(RubixResource):
     def post(cls):
         access_token = get_access_token()
         args = cls.parser.parse_args()
-        uuid = str(uuid_.uuid4())
+        uuid = str(shortuuid.uuid())
         user_uuid = decode_jwt_token(access_token).get('sub', '')
         device = DeviceModel(uuid=uuid, user_uuid=user_uuid, **args)
         device.save_to_db()

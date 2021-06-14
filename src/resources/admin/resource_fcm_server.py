@@ -1,4 +1,4 @@
-import uuid as uuid_
+import shortuuid
 
 from flask_restful import reqparse
 from rubix_http.exceptions.exception import NotFoundException
@@ -31,7 +31,7 @@ class FcmServerResource(RubixResource):
         args['key'] = aes_encrypt(args['key'])
         fcm_server = FcmServerModel.find_one()
         if not fcm_server:
-            uuid = str(uuid_.uuid4())
+            uuid = str(shortuuid.uuid())
             fcm_server = FcmServerModel(uuid=uuid, **args)
             fcm_server.save_to_db()
         else:

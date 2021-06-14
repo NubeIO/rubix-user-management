@@ -1,4 +1,4 @@
-import uuid as uuid_
+import shortuuid
 
 from flask_restful import marshal_with, reqparse
 from rubix_http.exceptions.exception import NotFoundException
@@ -26,7 +26,7 @@ class SiteResourceList(RubixResource):
     @marshal_with(site_return_fields)
     def post(cls):
         args = cls.parser.parse_args()
-        uuid = str(uuid_.uuid4())
+        uuid = str(shortuuid.uuid())
         site = SiteModel(uuid=uuid, **args)
         site.save_to_db()
         return site

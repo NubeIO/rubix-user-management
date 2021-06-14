@@ -1,4 +1,4 @@
-import uuid
+import shortuuid
 
 from flask_restful import reqparse
 from rubix_http.exceptions.exception import NotFoundException, UnauthorizedException, BadDataException
@@ -22,7 +22,7 @@ class UsersCreateResource(RubixResource):
     @classmethod
     def post(cls):
         args = cls.parser.parse_args()
-        uuid_ = str(uuid.uuid4())
+        uuid_ = str(shortuuid.uuid())
         user = UserModel(uuid=uuid_, **args)
         user.password = encrypt_password(user.password)
         user.save_to_db()
