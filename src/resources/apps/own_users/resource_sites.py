@@ -6,7 +6,7 @@ from src.resources.utils import get_access_token, decode_jwt_token
 from src.rest_schema.schema_site import site_return_fields
 
 
-class OwnUserSitesResourceList(RubixResource):
+class SitesResourceList(RubixResource):
 
     @classmethod
     @marshal_with(site_return_fields)

@@ -8,7 +8,7 @@ from src.resources.utils import get_access_token, decode_jwt_token
 from src.rest_schema.schema_device import device_all_attributes, device_return_fields
 
 
-class DeviceResourceList(RubixResource):
+class DevicesResourceList(RubixResource):
     parser = reqparse.RequestParser()
     for attr in device_all_attributes:
         parser.add_argument(attr,
@@ -39,7 +39,7 @@ class DeviceResourceList(RubixResource):
         return device
 
 
-class DeviceResourceByUUID(RubixResource):
+class DevicesResourceByUUID(RubixResource):
     @classmethod
     @marshal_with(device_return_fields)
     def get(cls, uuid):
@@ -69,7 +69,7 @@ class DeviceResourceByUUID(RubixResource):
         return '', 204
 
 
-class DeviceResourceByDeviceId(RubixResource):
+class DevicesResourceByDeviceId(RubixResource):
     @classmethod
     def delete(cls, device_id):
         device: DeviceModel = DeviceModel.find_by_device_id(device_id)
