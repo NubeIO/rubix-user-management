@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-import multiprocessing
 import os
 
 import click
@@ -9,10 +8,6 @@ from src import AppSetting, GunicornFlaskApplication
 
 CLI_CTX_SETTINGS = dict(help_option_names=["-h", "--help"], max_content_width=120, ignore_unknown_options=True,
                         allow_extra_args=True)
-
-
-def number_of_workers():
-    return (multiprocessing.cpu_count() * 2) + 1
 
 
 @click.command(context_settings=CLI_CTX_SETTINGS)
@@ -33,7 +28,7 @@ def cli(port, global_dir, data_dir, config_dir, prod, workers, setting_file, log
                          prod=prod).reload(setting_file)
     options = {
         'bind': '%s:%s' % ('0.0.0.0', setting.port),
-        'workers': workers if workers is not None else number_of_workers() if prod else 1,
+        'workers': 1,
         'logconfig': logging_conf,
         'preload_app': False,
         'config': gunicorn_config

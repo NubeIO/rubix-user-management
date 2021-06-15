@@ -1,5 +1,4 @@
 import shortuuid
-
 from flask_restful import marshal_with, reqparse
 from rubix_http.exceptions.exception import NotFoundException
 from rubix_http.resource import RubixResource
@@ -9,7 +8,7 @@ from src.resources.utils import get_access_token, decode_jwt_token
 from src.rest_schema.schema_device import device_all_attributes, device_return_fields
 
 
-class DeviceResourceList(RubixResource):
+class DevicesResourceList(RubixResource):
     parser = reqparse.RequestParser()
     for attr in device_all_attributes:
         parser.add_argument(attr,
@@ -23,7 +22,7 @@ class DeviceResourceList(RubixResource):
     def get(cls):
         access_token = get_access_token()
         user_uuid = decode_jwt_token(access_token).get('sub', '')
-        return DeviceModel.find_by_user_uuid(user_uuid=user_uuid)
+        return DeviceModel.find_all_by_user_uuid(user_uuid=user_uuid)
 
     @classmethod
     @marshal_with(device_return_fields)
@@ -32,12 +31,15 @@ class DeviceResourceList(RubixResource):
         args = cls.parser.parse_args()
         uuid = str(shortuuid.uuid())
         user_uuid = decode_jwt_token(access_token).get('sub', '')
+        device = DeviceModel.find_by_user_uuid_and_device_id(user_uuid, args['device_id'])
+        if device:
+            return device
         device = DeviceModel(uuid=uuid, user_uuid=user_uuid, **args)
         device.save_to_db()
         return device
 
 
-class DeviceResourceByUUID(RubixResource):
+class DevicesResourceByUUID(RubixResource):
     @classmethod
     @marshal_with(device_return_fields)
     def get(cls, uuid):
@@ -63,5 +65,15 @@ class DeviceResourceByUUID(RubixResource):
         device: DeviceModel = DeviceModel.find_by_uuid(uuid)
         if device is None:
             raise NotFoundException("Device not found")
+        device.delete_from_db()
+        return '', 204
+
+
+class DevicesResourceByDeviceId(RubixResource):
+    @classmethod
+    def delete(cls, device_id):
+        device: DeviceModel = DeviceModel.find_by_device_id(device_id)
+        if device is None:
+            return '', 204  # we are not throwing error even though we didn't match the device_uuid
         device.delete_from_db()
         return '', 204

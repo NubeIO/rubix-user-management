@@ -1,5 +1,4 @@
 import shortuuid
-
 from flask_restful import marshal_with, reqparse
 from rubix_http.exceptions.exception import NotFoundException
 from rubix_http.resource import RubixResource
@@ -8,7 +7,7 @@ from src.models.site.model_site import SiteModel
 from src.rest_schema.schema_site import site_all_attributes, site_return_fields
 
 
-class SiteResourceList(RubixResource):
+class AdminSitesResourceList(RubixResource):
     parser = reqparse.RequestParser()
     for attr in site_all_attributes:
         parser.add_argument(attr,
@@ -32,7 +31,7 @@ class SiteResourceList(RubixResource):
         return site
 
 
-class SiteResourceByUUID(RubixResource):
+class AdminSitesResourceByUUID(RubixResource):
     patch_parser = reqparse.RequestParser()
     for attr in site_all_attributes:
         patch_parser.add_argument(attr,
@@ -52,7 +51,7 @@ class SiteResourceByUUID(RubixResource):
     @classmethod
     @marshal_with(site_return_fields)
     def patch(cls, uuid):
-        args = SiteResourceByUUID.patch_parser.parse_args()
+        args = AdminSitesResourceByUUID.patch_parser.parse_args()
         site: SiteModel = SiteModel.find_by_uuid(uuid)
         if site is None:
             raise NotFoundException("Site not found")
