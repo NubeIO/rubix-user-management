@@ -5,7 +5,7 @@ from rubix_http.resource import RubixResource
 from werkzeug.security import check_password_hash
 
 from src.models.user.model_user import UserModel
-from src.resources.utils import get_access_token, decode_jwt_token, encrypt_password, encode_jwt_token
+from src.resources.utils import encrypt_password, encode_jwt_token, get_authorized_user_uuid, get_authorized_username
 from src.rest_schema.schema_user import user_all_attributes
 
 
@@ -32,13 +32,12 @@ class UsersChangePasswordResource(RubixResource):
 
     @classmethod
     def post(cls):
-        access_token = get_access_token()
         parser = reqparse.RequestParser()
         parser.add_argument('username', type=str, required=True, store_missing=False)
         parser.add_argument('password', type=str, required=True, store_missing=False)
         parser.add_argument('new_password', type=str, required=True, store_missing=False)
         args = parser.parse_args()
-        username = decode_jwt_token(access_token).get('username', '')
+        username = get_authorized_username()
         user: UserModel = UserModel.find_by_username(username)
         if user is None:
             raise NotFoundException("User does not exist")
@@ -87,7 +86,6 @@ class UsersCheckByEmailResource(RubixResource):
 class UsersRefreshToken(RubixResource):
     @classmethod
     def get(cls):
-        access_token = get_access_token()
-        username = decode_jwt_token(access_token).get('username', '')
-        uuid_ = decode_jwt_token(access_token).get('sub', '')
+        username = get_authorized_username()
+        uuid_ = get_authorized_user_uuid()
         return encode_jwt_token(uuid_, username)

@@ -16,6 +16,10 @@ class DeviceModel(ModelBase):
     )
 
     @classmethod
+    def find_by_user_uuid_and_uuid(cls, user_uuid: str, uuid: str):
+        return cls.query.filter_by(user_uuid=user_uuid, uuid=uuid).first()
+
+    @classmethod
     def find_by_device_id(cls, device_id: str):
         return cls.query.filter_by(device_id=device_id).first()
 

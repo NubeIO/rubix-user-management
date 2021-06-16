@@ -4,7 +4,7 @@ from rubix_http.exceptions.exception import NotFoundException
 from rubix_http.resource import RubixResource
 
 from src.models.device.model_device import DeviceModel
-from src.resources.utils import get_access_token, decode_jwt_token
+from src.resources.utils import get_authorized_user_uuid
 from src.rest_schema.schema_device import device_all_attributes, device_return_fields
 
 
@@ -20,17 +20,15 @@ class DevicesResourceList(RubixResource):
     @classmethod
     @marshal_with(device_return_fields)
     def get(cls):
-        access_token = get_access_token()
-        user_uuid = decode_jwt_token(access_token).get('sub', '')
+        user_uuid = get_authorized_user_uuid()
         return DeviceModel.find_all_by_user_uuid(user_uuid=user_uuid)
 
     @classmethod
     @marshal_with(device_return_fields)
     def post(cls):
-        access_token = get_access_token()
         args = cls.parser.parse_args()
         uuid = str(shortuuid.uuid())
-        user_uuid = decode_jwt_token(access_token).get('sub', '')
+        user_uuid = get_authorized_user_uuid()
         device = DeviceModel.find_by_user_uuid_and_device_id(user_uuid, args['device_id'])
         if device:
             return device
@@ -43,7 +41,8 @@ class DevicesResourceByUUID(RubixResource):
     @classmethod
     @marshal_with(device_return_fields)
     def get(cls, uuid):
-        device: DeviceModel = DeviceModel.find_by_uuid(uuid)
+        user_uuid = get_authorized_user_uuid()
+        device: DeviceModel = DeviceModel.find_by_user_uuid_and_uuid(user_uuid, uuid)
         if device is None:
             raise NotFoundException('Device not found')
         return device
@@ -54,7 +53,8 @@ class DevicesResourceByUUID(RubixResource):
         parser = reqparse.RequestParser()
         parser.add_argument('device_id', type=str, required=False, store_missing=False)
         args = parser.parse_args()
-        device: DeviceModel = DeviceModel.find_by_uuid(uuid)
+        user_uuid = get_authorized_user_uuid()
+        device: DeviceModel = DeviceModel.find_by_user_uuid_and_uuid(user_uuid, uuid)
         if device is None:
             raise NotFoundException("Device not found")
         device.update(**args)
@@ -62,7 +62,8 @@ class DevicesResourceByUUID(RubixResource):
 
     @classmethod
     def delete(cls, uuid):
-        device: DeviceModel = DeviceModel.find_by_uuid(uuid)
+        user_uuid = get_authorized_user_uuid()
+        device: DeviceModel = DeviceModel.find_by_user_uuid_and_uuid(user_uuid, uuid)
         if device is None:
             raise NotFoundException("Device not found")
         device.delete_from_db()
@@ -72,7 +73,8 @@ class DevicesResourceByUUID(RubixResource):
 class DevicesResourceByDeviceId(RubixResource):
     @classmethod
     def delete(cls, device_id):
-        device: DeviceModel = DeviceModel.find_by_device_id(device_id)
+        user_uuid = get_authorized_user_uuid()
+        device: DeviceModel = DeviceModel.find_by_user_uuid_and_device_id(user_uuid, device_id)
         if device is None:
             return '', 204  # we are not throwing error even though we didn't match the device_uuid
         device.delete_from_db()
