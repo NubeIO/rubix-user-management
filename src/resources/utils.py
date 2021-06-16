@@ -59,6 +59,16 @@ def get_access_token():
     return str.replace(str(request.headers['Authorization']), 'Bearer ', '')
 
 
+def get_authorized_user_uuid():
+    access_token = get_access_token()
+    return decode_jwt_token(access_token).get('sub', '')
+
+
+def get_authorized_username():
+    access_token = get_access_token()
+    return decode_jwt_token(access_token).get('username', '')
+
+
 def decode_jwt_token(token):
     app_setting = current_app.config[AppSetting.FLASK_KEY]
     try:
