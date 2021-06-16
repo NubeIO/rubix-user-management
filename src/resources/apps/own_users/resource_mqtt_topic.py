@@ -14,7 +14,7 @@ class MqttTopicsResource(RubixResource):
         output: dict = {}
         for site in user.sites:
             output[site.uuid] = {
-                'layout_topic': f'{global_uuid}/{site.uuid}/layout',
-                'alert_topic': f'{global_uuid}/{site.uuid}/alerts'
+                'layout_topic': f'{global_uuid}/{site.site_uuid}/layout',
+                'alert_topic': f'{global_uuid}/{site.site_uuid}/alerts'
             }
         return output
