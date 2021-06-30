@@ -13,7 +13,7 @@ class MqttTopicsResource(RubixResource):
         user = UserModel.find_by_uuid(uuid)
         output: dict = {}
         for site in user.sites:
-            output[site.uuid] = {
+            output[site.site_uuid] = {
                 'layout_topic': f'{global_uuid}/{site.site_uuid}/layout',
                 'alert_topic': f'{global_uuid}/{site.site_uuid}/alerts'
             }
