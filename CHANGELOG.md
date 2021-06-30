@@ -1,4 +1,7 @@
 # CHANGELOG
+## [v1.2.0](https://github.com/NubeIO/rubix-user-management/tree/v1.2.0) (2021-06-30)
+- Fix: find user's sites list nullability
+
 ## [v1.1.0](https://github.com/NubeIO/rubix-user-management/tree/v1.1.0) (2021-06-16)
 - Site implementations
 - Push Notification of Alerts
