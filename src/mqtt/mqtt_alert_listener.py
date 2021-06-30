@@ -53,7 +53,7 @@ class MqttAlertListener(MqttClientBase):
                         if title and subtitle:
                             data = {
                                 "to": "",
-                                "notification": {
+                                "data": {
                                     "title": title,
                                     "body": subtitle
                                 }
