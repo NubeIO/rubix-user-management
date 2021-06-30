@@ -18,7 +18,7 @@ site_all_attributes = {
         'required': False,
     },
     'zip': {
-        'type': str,
+        'type': int,
         'required': False,
     },
     'country': {
@@ -26,11 +26,11 @@ site_all_attributes = {
         'required': False,
     },
     'lat': {
-        'type': str,
+        'type': float,
         'required': False,
     },
     'lon': {
-        'type': str,
+        'type': float,
         'required': False,
     },
     'time_zone': {
