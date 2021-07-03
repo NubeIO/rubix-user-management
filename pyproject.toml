@@ -14,7 +14,7 @@ gevent = [
 ]
 rubix-http = { git = "https://github.com/NubeIO/rubix-http", rev = "v1.3.0" }
 PyJWT = "^2.1.0"
-rubix-registry = { git = "https://github.com/NubeIO/rubix-registry", rev = "v1.0.0" }
+rubix-registry = { git = "https://github.com/NubeIO/rubix-registry", rev = "v1.1.1" }
 pycrypto = "^2.6.1"
 Flask-Migrate = "^2.6.0"
 Flask-Script = "^2.0.6"
