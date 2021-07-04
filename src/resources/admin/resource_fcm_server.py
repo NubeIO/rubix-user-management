@@ -1,5 +1,4 @@
 import shortuuid
-
 from flask_restful import reqparse
 from rubix_http.exceptions.exception import NotFoundException
 from rubix_http.resource import RubixResource
@@ -23,7 +22,7 @@ class FcmServerResource(RubixResource):
         key = FcmServerModel.get_key()
         if not key:
             raise NotFoundException("Fcm server does not exist")
-        return {"key": f"***{key[-4:]}"}
+        return {"key": f"{key[:4]}***{key[-4:]}"}
 
     @classmethod
     def put(cls):

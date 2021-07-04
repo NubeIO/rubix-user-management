@@ -79,11 +79,9 @@ class UsersVerifyResource(RubixResource):
         user.commit()
         data = {
             "to": "",
-            "notification": {
-                "title": "NubeIO User Status",
-                "body": "User is verified by Admin!"
-            },
             "data": {
+                "title": "NubeIO User Status",
+                "body": "User is verified by Admin!",
                 "type": FcmDataType.USER_VERIFICATION.name
             }
         }

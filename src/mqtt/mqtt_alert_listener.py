@@ -6,7 +6,8 @@ import gevent
 from flask import current_app
 from flask.ctx import AppContext
 from paho.mqtt.client import MQTTMessage
-from registry.registry import RubixRegistry
+from registry.models.model_device_info import DeviceInfoModel
+from registry.resources.resource_device_info import get_device_info
 from rubix_mqtt.mqtt import MqttClientBase
 
 from src.handlers.exception import exception_handler
@@ -53,7 +54,7 @@ class MqttAlertListener(MqttClientBase):
                         if title and subtitle:
                             data = {
                                 "to": "",
-                                "notification": {
+                                "data": {
                                     "title": title,
                                     "body": subtitle
                                 }
@@ -69,5 +70,5 @@ class MqttAlertListener(MqttClientBase):
 
     @classmethod
     def make_topic(cls) -> str:
-        global_uuid: str = RubixRegistry().read_wires_plat().get("global_uuid")
-        return f'{global_uuid}/+/alerts'
+        device_info: Union[DeviceInfoModel, None] = get_device_info()
+        return f'{device_info.global_uuid if device_info else ""}/+/alerts'
