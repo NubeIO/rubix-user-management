@@ -1,4 +1,11 @@
 # CHANGELOG
+## [v1.3.0](https://github.com/NubeIO/rubix-user-management/tree/v1.3.0) (2021-07-04)
+- Fix: MQTT topic
+- Notification payload change for KIOSK mode support
+- Change SiteModel schema
+- Upgrade rubix-registry to v1.1.1
+- FCM server key get improvement
+
 ## [v1.2.0](https://github.com/NubeIO/rubix-user-management/tree/v1.2.0) (2021-06-30)
 - Fix: find user's sites list nullability
 
