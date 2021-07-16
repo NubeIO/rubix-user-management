@@ -27,9 +27,12 @@ class FlaskThread(Thread):
 class Background:
     @staticmethod
     def run():
-        from src.mqtt import MqttAlertListener
+        from src.services.mqtt import MqttAlertListener
         setting: AppSetting = current_app.config[AppSetting.FLASK_KEY]
         logger.info("Running Background Task...")
         if setting.mqtt.enabled:
             MqttAlertListener().start(setting.mqtt)
-
+        if setting.notification.enable:
+            from .services.notification_registry import NotificationRegistry
+            FlaskThread(target=NotificationRegistry().register, kwargs={'config': setting.notification},
+                        daemon=True).start()

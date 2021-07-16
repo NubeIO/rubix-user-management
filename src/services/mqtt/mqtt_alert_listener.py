@@ -11,6 +11,7 @@ from registry.resources.resource_device_info import get_device_info
 from rubix_mqtt.mqtt import MqttClientBase
 
 from src.handlers.exception import exception_handler
+from src.services.notification_registry import NotificationRegistry
 from src.setting import MqttSetting
 
 logger = logging.getLogger(__name__)
@@ -44,22 +45,25 @@ class MqttAlertListener(MqttClientBase):
                 return
             topic_parts = message.topic.split(self.SEPARATOR)
             if len(topic_parts) == len(self.make_topic().split(self.SEPARATOR)):
-                site_uuid: str = topic_parts[1]
-                from src.models.user_site.model_user_site import UserSiteModel
-                site_users = UserSiteModel.find_by_site_uuid(site_uuid)
-                for user in site_users:
-                    for alert in alerts:
-                        title = alert.get("title")
-                        subtitle = alert.get("subtitle")
-                        if title and subtitle:
-                            data = {
-                                "to": "",
-                                "data": {
-                                    "title": title,
-                                    "body": subtitle
+                for alert in alerts:
+                    title = alert.get("title")
+                    subtitle = alert.get("subtitle")
+                    alert_type = alert.get("alert_type")
+                    priority = alert.get("priority")
+                    if NotificationRegistry().check_and_add_notification(f'{title}^{subtitle}^{alert_type}^{priority}'):
+                        site_uuid: str = topic_parts[1]
+                        from src.models.user_site.model_user_site import UserSiteModel
+                        site_users = UserSiteModel.find_by_site_uuid(site_uuid)
+                        for user in site_users:
+                            if title and subtitle:
+                                data = {
+                                    "to": "",
+                                    "data": {
+                                        "title": title,
+                                        "body": subtitle
+                                    }
                                 }
-                            }
-                            gevent.spawn(self.send_notification(user.user_uuid, data, self.__app_context))
+                                gevent.spawn(self.send_notification(user.user_uuid, data, self.__app_context))
 
     @classmethod
     def send_notification(cls, user_uuid: str, data: dict, app_context):
