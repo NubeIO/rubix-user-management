@@ -79,11 +79,17 @@ class UsersVerifyResource(RubixResource):
         user.commit()
         data = {
             "to": "",
+            "notification": {
+                "title": "NubeIO User Status",
+                "body": "User is verified by Admin!",
+            },
             "data": {
                 "title": "NubeIO User Status",
                 "body": "User is verified by Admin!",
                 "type": FcmDataType.USER_VERIFICATION.name
-            }
+            },
+            "content_available": True,
+            "priority": "high"
         }
         DeviceModel.send_notification_by_user_uuid(user.uuid, FcmServerModel.get_key(), data)
         return {'message': 'User has been verified successfully'}

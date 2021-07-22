@@ -58,10 +58,16 @@ class MqttAlertListener(MqttClientBase):
                             if title and subtitle:
                                 data = {
                                     "to": "",
+                                    "notification": {
+                                        "title": title,
+                                        "body": subtitle
+                                    },
                                     "data": {
                                         "title": title,
                                         "body": subtitle
-                                    }
+                                    },
+                                    "content_available": True,
+                                    "priority": "high"
                                 }
                                 gevent.spawn(self.send_notification(user.user_uuid, data, self.__app_context))
 
