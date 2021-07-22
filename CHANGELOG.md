@@ -1,4 +1,8 @@
 # CHANGELOG
+## [v1.3.1](https://github.com/NubeIO/rubix-user-management/tree/v1.3.1) (2021-07-22)
+- Restrict the push all notification
+- Change notification format
+
 ## [v1.3.0](https://github.com/NubeIO/rubix-user-management/tree/v1.3.0) (2021-07-04)
 - Fix: MQTT topic
 - Notification payload change for KIOSK mode support
