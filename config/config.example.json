@@ -13,5 +13,10 @@
     "attempt_reconnect_on_unavailable": true,
     "attempt_reconnect_secs": 5,
     "timeout": 10
+  },
+  "notification": {
+    "enabled": true,
+    "timer": 1,
+    "resend": 10
   }
 }

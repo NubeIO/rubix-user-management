@@ -30,6 +30,15 @@ class MqttSetting(MqttSettingBase):
         self.name = 'mqtt'
 
 
+class NotificationSetting(BaseSetting):
+    KEY = 'notification'
+
+    def __init__(self):
+        self.enable: bool = True
+        self.timer: int = 1
+        self.resend: int = 10
+
+
 class AppSetting:
     PORT: int = 1617
     GLOBAL_DIR_ENV = 'APP_BASE_GLOBAL'
@@ -60,6 +69,7 @@ class AppSetting:
         self.__fcm_secret_key = ''
         self.__fcm_secret_key_file = os.path.join(self.__config_dir, self.default_fcm_secret_key_file)
         self.__mqtt_setting = MqttSetting()
+        self.__notification_setting = NotificationSetting()
 
     @property
     def port(self):
@@ -93,6 +103,10 @@ class AppSetting:
     def mqtt(self) -> MqttSetting:
         return self.__mqtt_setting
 
+    @property
+    def notification(self) -> NotificationSetting:
+        return self.__notification_setting
+
     def serialize(self, pretty=True) -> str:
         m = {
             'prod': self.prod, 'global_dir': self.global_dir, 'data_dir': self.data_dir, 'config_dir': self.config_dir
@@ -103,6 +117,7 @@ class AppSetting:
     def reload(self, setting_file: str, is_json_str: bool = False):
         data = self.__read_file(setting_file, self.__config_dir, is_json_str)
         self.__mqtt_setting = self.__mqtt_setting.reload(data.get(MqttSetting.KEY, None))
+        self.__notification_setting = self.__notification_setting.reload(data.get(NotificationSetting.KEY, None))
         return self
 
     def init_app(self, app: Flask):
