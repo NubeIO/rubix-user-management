@@ -1,3 +1,5 @@
+from typing import List
+
 from sqlalchemy import UniqueConstraint
 
 from src import db
@@ -35,11 +37,11 @@ class DeviceModel(ModelBase):
 
     @classmethod
     def send_notification_by_user_uuid(cls, user_uuid: str, key: str, data: dict):
-        devices = cls.find_all_by_user_uuid(user_uuid)
+        devices: List[DeviceModel] = cls.find_all_by_user_uuid(user_uuid)
         for device in devices:
             if 'to' in data:
                 data['to'] = device.device_id
-            content = send_fcm_notification(key, data)
+            content = send_fcm_notification(key, data, device.platform)
             failure: bool = bool(content.get('failure', False))
             results = content.get('results', [])
             if failure and len(results) > 0 and (
