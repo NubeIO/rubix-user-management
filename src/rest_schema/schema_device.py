@@ -5,6 +5,10 @@ device_all_attributes = {
         'type': str,
         'required': True,
     },
+    'platform': {
+        'type': str,
+        'required': False,
+    },
 }
 
 device_return_attributes = {
@@ -17,6 +21,11 @@ device_return_attributes = {
     'device_id': {
         'type': str,
     },
+    'platform': {
+        'type': str,
+        'nested': True,
+        'dict': 'platform.name'
+    },
 }
 
 device_nested_return_attributes = {
@@ -25,6 +34,11 @@ device_nested_return_attributes = {
     },
     'device_id': {
         'type': str,
+    },
+    'platform': {
+        'type': str,
+        'nested': True,
+        'dict': 'platform.name'
     },
 }
 

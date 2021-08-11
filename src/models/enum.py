@@ -8,3 +8,8 @@ class StateType(enum.Enum):
 
 class FcmDataType(enum.Enum):
     USER_VERIFICATION = 1
+
+
+class Platform(enum.Enum):
+    ANDROID = 1
+    IOS = 2
