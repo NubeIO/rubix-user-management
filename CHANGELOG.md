@@ -1,4 +1,13 @@
 # CHANGELOG
+## [v1.3.3](https://github.com/NubeIO/rubix-user-management/tree/v1.3.3) (2021-09-05)
+- Fix: notification block removal issue on iteration
+- Build image change for supporting older OS
+
+## [v1.3.2](https://github.com/NubeIO/rubix-user-management/tree/v1.3.2) (2021-08-13)
+- Add platform on device schema
+- Remove notification block for platform ANDROID
+- Default platform as IOS: sends notification block
+
 ## [v1.3.1](https://github.com/NubeIO/rubix-user-management/tree/v1.3.1) (2021-07-22)
 - Restrict the push all notification
 - Change notification format
