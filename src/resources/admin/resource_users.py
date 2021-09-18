@@ -5,7 +5,7 @@ from rubix_http.exceptions.exception import NotFoundException
 from rubix_http.resource import RubixResource
 
 from src.models.device.model_device import DeviceModel
-from src.models.enum import StateType, FcmDataType
+from src.models.enum import StateType
 from src.models.fcm_server.model_fcm_server import FcmServerModel
 from src.models.user.model_user import UserModel
 from src.resources.utils import parse_user_update
@@ -82,11 +82,6 @@ class UsersVerifyResource(RubixResource):
             "notification": {
                 "title": "NubeIO User Status",
                 "body": "User is verified by Admin!",
-            },
-            "data": {
-                "title": "NubeIO User Status",
-                "body": "User is verified by Admin!",
-                "type": FcmDataType.USER_VERIFICATION.name
             },
             "content_available": True,
             "priority": "high"
