@@ -37,19 +37,19 @@ class DevicesResourceList(RubixResource):
         return device
 
 
-class DevicesResourceByUUID(RubixResource):
+class DevicesResourceByDeviceId(RubixResource):
     @classmethod
     @marshal_with(device_return_fields)
-    def get(cls, uuid):
+    def get(cls, device_id):
         user_uuid = get_authorized_user_uuid()
-        device: DeviceModel = DeviceModel.find_by_user_uuid_and_uuid(user_uuid, uuid)
+        device: DeviceModel = DeviceModel.find_by_user_uuid_and_device_id(user_uuid, device_id)
         if device is None:
             raise NotFoundException('Device not found')
         return device
 
     @classmethod
     @marshal_with(device_return_fields)
-    def patch(cls, uuid):
+    def patch(cls, device_id):
         parser = reqparse.RequestParser()
         parser.add_argument('device_id', type=str, required=False, store_missing=False)
         parser.add_argument('device_name', type=str, required=False, store_missing=False)
@@ -57,23 +57,12 @@ class DevicesResourceByUUID(RubixResource):
         parser.add_argument('kiosk', type=bool, required=False, store_missing=False)
         args = parser.parse_args()
         user_uuid = get_authorized_user_uuid()
-        device: DeviceModel = DeviceModel.find_by_user_uuid_and_uuid(user_uuid, uuid)
+        device: DeviceModel = DeviceModel.find_by_user_uuid_and_device_id(user_uuid, device_id)
         if device is None:
             raise NotFoundException("Device not found")
         device.update(**args)
         return device
 
-    @classmethod
-    def delete(cls, uuid):
-        user_uuid = get_authorized_user_uuid()
-        device: DeviceModel = DeviceModel.find_by_user_uuid_and_uuid(user_uuid, uuid)
-        if device is None:
-            raise NotFoundException("Device not found")
-        device.delete_from_db()
-        return '', 204
-
-
-class DevicesResourceByDeviceId(RubixResource):
     @classmethod
     def delete(cls, device_id):
         user_uuid = get_authorized_user_uuid()

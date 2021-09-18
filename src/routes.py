@@ -6,8 +6,7 @@ from src.resources.admin.resource_sites import AdminSitesResourceList, AdminSite
 from src.resources.admin.resource_user_site import UserSiteResourceList, UserSiteResourceByUUID
 from src.resources.admin.resource_users import *
 from src.resources.apps.own_users.resource_config import MqttConfigResource
-from src.resources.apps.own_users.resource_devices import DevicesResourceList, DevicesResourceByUUID, \
-    DevicesResourceByDeviceId
+from src.resources.apps.own_users.resource_devices import DevicesResourceList, DevicesResourceByDeviceId
 from src.resources.apps.own_users.resource_mqtt_topic import MqttTopicsResource
 from src.resources.apps.own_users.resource_sites import SitesResourceList
 from src.resources.apps.own_users.resource_user import UserResource
@@ -65,7 +64,6 @@ api_apps_own_users.add_resource(UserResource, '')
 api_apps_own_users.add_resource(UsersChangePasswordResource, '/change_password')
 api_apps_own_users.add_resource(UsersRefreshToken, '/refresh_token')
 api_apps_own_users.add_resource(DevicesResourceList, '/devices')
-api_apps_own_users.add_resource(DevicesResourceByUUID, '/devices/uuid/<string:uuid>')
 api_apps_own_users.add_resource(DevicesResourceByDeviceId, '/devices/device_id/<string:device_id>')
 api_apps_own_users.add_resource(SitesResourceList, '/sites')
 api_apps_own_users.add_resource(MqttTopicsResource, '/mqtt')
