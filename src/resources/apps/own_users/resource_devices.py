@@ -52,7 +52,9 @@ class DevicesResourceByUUID(RubixResource):
     def patch(cls, uuid):
         parser = reqparse.RequestParser()
         parser.add_argument('device_id', type=str, required=False, store_missing=False)
+        parser.add_argument('device_name', type=str, required=False, store_missing=False)
         parser.add_argument('platform', type=str, required=False, store_missing=False)
+        parser.add_argument('kiosk', type=bool, required=False, store_missing=False)
         args = parser.parse_args()
         user_uuid = get_authorized_user_uuid()
         device: DeviceModel = DeviceModel.find_by_user_uuid_and_uuid(user_uuid, uuid)

@@ -21,11 +21,17 @@ device_return_attributes = {
     'device_id': {
         'type': str,
     },
+    'device_name': {
+        'type': str,
+    },
     'platform': {
         'type': str,
         'nested': True,
         'dict': 'platform.name'
     },
+    'kiosk': {
+        'type': bool
+    }
 }
 
 device_nested_return_attributes = {

@@ -38,7 +38,7 @@ class MqttAlertListener(MqttClientBase):
 
     @exception_handler
     def _on_message(self, client, userdata, message: MQTTMessage):
-        logger.debug(f'Listener Topic: {message.topic}, Message: {message.payload}')
+        logger.info(f'Listener Topic: {message.topic}, Message: {message.payload}')
         with self.__app_context():
             alerts = json.loads(message.payload).get('alerts', [])
             if len(alerts) == 0:
@@ -59,10 +59,6 @@ class MqttAlertListener(MqttClientBase):
                                 data = {
                                     "to": "",
                                     "notification": {
-                                        "title": title,
-                                        "body": subtitle
-                                    },
-                                    "data": {
                                         "title": title,
                                         "body": subtitle
                                     },

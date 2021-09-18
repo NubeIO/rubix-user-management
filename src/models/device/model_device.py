@@ -13,7 +13,9 @@ class DeviceModel(ModelBase):
     uuid = db.Column(db.String(80), primary_key=True, nullable=False)
     user_uuid = db.Column(db.String, db.ForeignKey('users.uuid'), nullable=False)
     device_id = db.Column(db.String(80), nullable=True)
+    device_name = db.Column(db.String(80), nullable=False, default="Unknown Device")
     platform = db.Column(db.Enum(Platform), nullable=False, default=Platform.IOS)
+    kiosk = db.Column(db.Boolean, nullable=False, default=False)
 
     __table_args__ = (
         UniqueConstraint('user_uuid', 'device_id'),
@@ -36,12 +38,16 @@ class DeviceModel(ModelBase):
         return cls.query.filter_by(user_uuid=user_uuid).all()
 
     @classmethod
+    def find_all_non_kiosk_by_user_uuid(cls, user_uuid: str):
+        return cls.query.filter_by(user_uuid=user_uuid, kiosk=False).all()
+
+    @classmethod
     def send_notification_by_user_uuid(cls, user_uuid: str, key: str, data: dict):
-        devices: List[DeviceModel] = cls.find_all_by_user_uuid(user_uuid)
+        devices: List[DeviceModel] = cls.find_all_non_kiosk_by_user_uuid(user_uuid)
         for device in devices:
             if 'to' in data:
                 data['to'] = device.device_id
-            content = send_fcm_notification(key, data, device.platform)
+            content = send_fcm_notification(key, data)
             failure: bool = bool(content.get('failure', False))
             results = content.get('results', [])
             if failure and len(results) > 0 and (
