@@ -38,7 +38,7 @@ class MqttAlertListener(MqttClientBase):
 
     @exception_handler
     def _on_message(self, client, userdata, message: MQTTMessage):
-        logger.debug(f'Listener Topic: {message.topic}, Message: {message.payload}')
+        logger.info(f'Listener Topic: {message.topic}, Message: {message.payload}')
         with self.__app_context():
             alerts = json.loads(message.payload).get('alerts', [])
             if len(alerts) == 0:
@@ -50,19 +50,19 @@ class MqttAlertListener(MqttClientBase):
                     subtitle = alert.get("subtitle")
                     alert_type = alert.get("alert_type")
                     priority = alert.get("priority")
-                    if NotificationRegistry().check_and_add_notification(f'{title}^{subtitle}^{alert_type}^{priority}'):
+                    notification = f'{title}^{subtitle}^{alert_type}^{priority}'
+                    logger.info(f">>> Notification alert: {notification}")
+                    if NotificationRegistry().check_and_add_notification(notification):
                         site_uuid: str = topic_parts[1]
+                        logger.info(f">>>>>> I am newly registered notification for site_uuid: {site_uuid}")
                         from src.models.user_site.model_user_site import UserSiteModel
                         site_users = UserSiteModel.find_by_site_uuid(site_uuid)
                         for user in site_users:
+                            logger.info(f">>>>>>>>> Sending data to user.user_uuid: {user.user_uuid}")
                             if title and subtitle:
                                 data = {
                                     "to": "",
                                     "notification": {
-                                        "title": title,
-                                        "body": subtitle
-                                    },
-                                    "data": {
                                         "title": title,
                                         "body": subtitle
                                     },
